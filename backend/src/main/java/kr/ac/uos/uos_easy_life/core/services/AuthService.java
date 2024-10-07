@@ -3,10 +3,11 @@ package kr.ac.uos.uos_easy_life.core.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import kr.ac.uos.uos_easy_life.core.interfaces.SessionRepository;
-import kr.ac.uos.uos_easy_life.core.interfaces.UosPortalApi;
-import kr.ac.uos.uos_easy_life.core.interfaces.UosPortalSessionManager;
+import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
+import kr.ac.uos.uos_easy_life.core.interfaces.UosSessionManager;
 import kr.ac.uos.uos_easy_life.core.interfaces.UserRepository;
-import kr.ac.uos.uos_easy_life.core.model.PortalUserBasicInfo;
+import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
+import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.User;
 import java.util.UUID;
 
@@ -15,12 +16,12 @@ public class AuthService {
 
   private final UserRepository userRepository;
   private final SessionRepository sessionRepository;
-  private final UosPortalSessionManager uosPortalSessionManager;
-  private final UosPortalApi uosPortalApi;
+  private final UosSessionManager uosPortalSessionManager;
+  private final UosApi uosPortalApi;
 
   @Autowired
   public AuthService(UserRepository userRepository, SessionRepository sessionRepository,
-      UosPortalSessionManager uosPortalSessionManager, UosPortalApi uosPortalApi) {
+      UosSessionManager uosPortalSessionManager, UosApi uosPortalApi) {
     this.userRepository = userRepository;
     this.sessionRepository = sessionRepository;
     this.uosPortalSessionManager = uosPortalSessionManager;
@@ -44,19 +45,21 @@ public class AuthService {
         throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
       }
     }
+
     // 사용자가 없는 경우 포털 로그인을 시도하여 로그인 정보가 올바른지 확인한다.
     else {
-      String portalSession = uosPortalSessionManager.createPortalSession(portalId, portalPassword);
+      UosSession uosSession = uosPortalSessionManager.createUosSession(portalId, portalPassword);
+
       // 만약 로그인 정보가 올바르다면 사용자를 생성하고 세션을 저장한 후 세션 키를 반환한다.
-      if (portalSession != null) {
+      if (uosSession != null) {
         // 포털에서 사용자 생성에 필요한 정보를 가져온다.
-        PortalUserBasicInfo userInfo = uosPortalApi.getUserInfo(portalSession, portalId);
+        UserBasicInfo userInfo = uosPortalApi.getUserInfo(uosSession);
         String id = UUID.randomUUID().toString();
 
         // 새로운 사용자를 생성한다.
-        user = new User(id, userInfo.getName(), userInfo.getStudentId(), userInfo.getGrade(),
-            userInfo.getSemester(), portalId, "", "");
+        user = new User(id, userInfo.getName(), userInfo.getStudentId(), 1, 1, portalId, "", "");
         user.setPassword(portalPassword);
+        System.out.println(user);
 
         // 사용자를 DB에 저장한다.
         userRepository.save(user);
@@ -65,6 +68,7 @@ public class AuthService {
         String session = sessionRepository.createSession(user.getId());
         return session;
       }
+
       // 로그인 정보가 올바르지 않은 경우 예외를 발생시킨다.
       else {
         throw new IllegalArgumentException("포탈 로그인 정보가 올바르지 않습니다.");

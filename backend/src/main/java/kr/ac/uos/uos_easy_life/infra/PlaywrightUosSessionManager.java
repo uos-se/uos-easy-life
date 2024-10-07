@@ -13,19 +13,35 @@ import com.microsoft.playwright.BrowserType.LaunchOptions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.Cookie;
-import kr.ac.uos.uos_easy_life.core.interfaces.UosPortalSessionManager;
+import kr.ac.uos.uos_easy_life.core.interfaces.UosSessionManager;
+import kr.ac.uos.uos_easy_life.core.model.UosSession;
 
 @Component
-public class PlaywrightUosPortalSessionManager implements UosPortalSessionManager {
+public class PlaywrightUosSessionManager implements UosSessionManager {
 
-  private final Map<String, String> sessionMap = new HashMap<>();
+  private final Map<String, UosSession> sessionMap = new HashMap<>();
+
+  private String findCookie(Page page, String cookieName, String domain) {
+    List<Cookie> cookies = page.context().cookies();
+    String cookieValue = null;
+    for (Cookie cookie : cookies) {
+      if (cookie.name.equals(cookieName) && (domain == null || cookie.domain.equals(domain))) {
+        cookieValue = cookie.value;
+        break;
+      }
+    }
+    if (cookieValue == null) {
+      throw new RuntimeException("Failed to get " + cookieName + " session");
+    }
+    return cookieValue;
+  }
 
   @Override
-  public String createPortalSession(String portalId, String portalPassword) {
+  public UosSession createUosSession(String portalId, String portalPassword) {
     // 기존에 해당 portalId로 생성된 세션이 있는지 확인한다.
     if (sessionMap.containsKey(portalId)) {
       // 만약 세션이 유효하면 해당 세션을 반환한다.
-      String session = sessionMap.get(portalId);
+      UosSession session = sessionMap.get(portalId);
       if (isSessionValid(session)) {
         return session;
       }
@@ -45,34 +61,35 @@ public class PlaywrightUosPortalSessionManager implements UosPortalSessionManage
     page.fill("#user_id", portalId);
     page.fill("#user_password", portalPassword);
     page.click("button:has-text('Login')");
-    page.waitForURL("https://portal.uos.ac.kr/*");
 
-    // 세션 쿠키 획득
-    List<Cookie> cookies = page.context().cookies();
-    String session = null;
-    for (Cookie cookie : cookies) {
-      if (cookie.name.equals("JSESSIONID")) {
-        session = cookie.value;
-        break;
-      }
-    }
+    // 포털 세션 획득
+    page.waitForURL("https://portal.uos.ac.kr/*");
+    String portalSession = findCookie(page, "JSESSIONID", null);
+
+    // 와이즈 세션 획득
+    page.navigate("https://wise.uos.ac.kr");
+    page.waitForURL("https://wise.uos.ac.kr/*");
+    String wiseSession = findCookie(page, "UOSSESSION", "wise.uos.ac.kr");
+
+    // 유클래스 세션 획득
+    page.navigate("https://uclass.uos.ac.kr/exsignon/sso/sso_index.php");
+    page.waitForURL("https://uclass.uos.ac.kr/*");
+    String uclassSession = findCookie(page, "PHPSESSID", null);
 
     // Playwright 종료
     browser.close();
     playwright.close();
 
-    // 만약 세션을 획득하지 못했다면 예외를 발생시킨다.
-    if (session == null) {
-      throw new RuntimeException("Failed to get session");
-    }
+    // 세션을 생성한다.
+    UosSession uosSession = new UosSession(portalSession, wiseSession, uclassSession);
 
     // 세션을 저장하고 반환한다.
-    sessionMap.put(portalId, session);
-    return session;
+    sessionMap.put(portalId, uosSession);
+    return uosSession;
   }
 
   @Override
-  public boolean isSessionValid(String session) {
+  public boolean isSessionValid(UosSession session) {
     if (session == null) {
       return false;
     }
