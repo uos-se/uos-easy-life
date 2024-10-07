@@ -19,6 +19,11 @@ public class Controller {
     this.authService = authService;
   }
 
+  @GetMapping("/")
+  public String index() {
+    return "UOS Easy Life API";
+  }
+
   @PostMapping("/login")
   public String login(@RequestParam String portalId, @RequestParam String portalPassword) {
     return authService.login(portalId, portalPassword);

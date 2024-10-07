@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+cd `dirname $0`/..
+ROOT=`pwd`
+
+# Build
+build
+
+# Run
+java -jar backend/build/libs/*-SNAPSHOT.jar
