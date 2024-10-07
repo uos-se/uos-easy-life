@@ -1,10 +1,13 @@
 package kr.ac.uos.uos_easy_life.infra;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType.LaunchOptions;
 import com.microsoft.playwright.Page;
@@ -74,14 +77,20 @@ public class PlaywrightUosPortalSessionManager implements UosPortalSessionManage
       return false;
     }
 
-    WebClient client = WebClient.create("https://portal.uos.ac.kr");
-    String response = client.get() //
-        .uri("/uos/SessionCheck.eps") //
-        .header("Cookie", "JSESSIONID=" + session) //
-        .retrieve() //
-        .bodyToMono(String.class) //
-        .block();
-
-    return response.contains("true");
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder().uri(URI.create("https://portal.uos.ac.kr/uos/SessionCheck.eps"))
+              .GET().header("Cookie", "JSESSIONID=" + session).build();
+      HttpClient client = HttpClient.newHttpClient();
+      HttpResponse<String> response =
+          client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+      if (response.statusCode() != 200) {
+        return false;
+      }
+      String body = (String) response.body();
+      return body.contains("true");
+    } catch (Exception e) {
+      return false;
+    }
   }
 }
