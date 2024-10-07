@@ -1,0 +1,147 @@
+package kr.ac.uos.uos_easy_life.core.model;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+public class User {
+  private String id; // 우리 서비스 내 사용자 고유 ID
+  private String name; // 이름
+  private String studentId; // 학번
+  private List<Department> departments;// 학과
+  private int currentGrade; // 학년
+  private int currentSemester; // 학기
+
+  // 로그인에 필요한 정보
+  private String portalId; // 포탈 아이디
+  private String hashedPortalPassword; // 해시된 비밀번호
+  private String salt; // 솔트
+
+
+  private static String hashPassword(String password, String salt) {
+    int iteration = 10000;
+    int keyLength = 256;
+    char[] passwordChars = password.toCharArray();
+    byte[] saltBytes = salt.getBytes();
+    Arrays.fill(passwordChars, Character.MIN_VALUE);
+    PBEKeySpec spec = new PBEKeySpec(passwordChars, saltBytes, iteration, keyLength);
+    try {
+      SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+      byte[] key = keyFactory.generateSecret(spec).getEncoded();
+      return Base64.getEncoder().encodeToString(key);
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+      throw new AssertionError("Error while hashing a password: " + e.getMessage(), e);
+    } finally {
+      spec.clearPassword();
+    }
+  }
+
+  private static String getNewSalt() {
+    SecureRandom random = new SecureRandom();
+    byte[] salt = new byte[16];
+    random.nextBytes(salt);
+    return Base64.getEncoder().encodeToString(salt);
+  }
+
+  public User(String id, String name, String studentId, int currentGrade, int currentSemester,
+      String portalId, String hashedPassword, String salt) {
+
+    // ID는 valid한 UUID여야 한다.
+    if (UUID.fromString(id) == null) {
+      throw new IllegalArgumentException("ID는 valid한 UUID여야 합니다.");
+    }
+    this.id = id;
+
+    // 이름은 최대 20글자까지만 허용한다.
+    if (name.length() > 20) {
+      throw new IllegalArgumentException("이름은 최대 20글자까지만 허용됩니다.");
+    }
+    this.name = name;
+
+    // 학번은 10자리 숫자로만 이루어져야 한다.
+    if (!studentId.matches("[0-9]{10}")) {
+      throw new IllegalArgumentException("학번은 10자리 숫자로만 이루어져야 합니다.");
+    }
+    this.studentId = studentId;
+
+    this.setCurrentGrade(currentGrade);
+    this.setCurrentSemester(currentSemester);
+
+    this.portalId = portalId;
+    this.hashedPortalPassword = hashedPassword;
+    this.salt = salt;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getStudentId() {
+    return studentId;
+  }
+
+  public List<Department> getDepartments() {
+    return departments;
+  }
+
+  public int getCurrentGrade() {
+    return currentGrade;
+  }
+
+  public void setCurrentGrade(int currentGrade) {
+    if (currentGrade < 1 || currentGrade > 5) {
+      throw new IllegalArgumentException("학년은 1~5 사이의 값만 허용됩니다.");
+    }
+    this.currentGrade = currentGrade;
+  }
+
+  public int getCurrentSemester() {
+    return currentSemester;
+  }
+
+  public void setCurrentSemester(int currentSemester) {
+    if (currentSemester != 1 && currentSemester != 2) {
+      throw new IllegalArgumentException("학기는 1, 2만 허용됩니다.");
+    }
+    this.currentSemester = currentSemester;
+  }
+
+  public String getPortalId() {
+    return portalId;
+  }
+
+  public String getHashedPortalPassword() {
+    return hashedPortalPassword;
+  }
+
+  public String getSalt() {
+    return salt;
+  }
+
+  public String setPassword(String password) {
+    this.salt = getNewSalt();
+    this.hashedPortalPassword = hashPassword(password, salt);
+    return hashedPortalPassword;
+  }
+
+  public boolean checkPassword(String password) {
+    return hashPassword(password, salt).equals(hashedPortalPassword);
+  }
+
+  @Override
+  public String toString() {
+    return "User{" + "name='" + name + '\'' + ", studentId='" + studentId + '\'' + ", department="
+        + departments + ", currentGrade=" + currentGrade + ", currentSemester=" + currentSemester
+        + '}';
+  }
+}
