@@ -1,0 +1,31 @@
+{
+	"name": "Java",
+	"image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "none",
+			"installMaven": "false",
+			"installGradle": "false"
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/node:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vscjava.vscode-gradle",
+				"mhutchie.git-graph",
+				"esbenp.prettier-vscode",
+				"streetsidesoftware.code-spell-checker",
+				"wayou.vscode-todo-highlight",
+				"GitHub.copilot",
+				"dbaeumer.vscode-eslint",
+				"yoavbls.pretty-ts-errors"
+			]
+		}
+	},
+	"postCreateCommand": "scripts/init.sh",
+	"remoteEnv": {
+		"PATH": "${containerEnv:PATH}:/${containerWorkspaceFolder}/scripts"
+	}
+}
