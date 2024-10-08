@@ -6,17 +6,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import kr.ac.uos.uos_easy_life.core.model.User;
 import kr.ac.uos.uos_easy_life.core.services.AuthService;
+import kr.ac.uos.uos_easy_life.core.services.UserService;
 
 @RestController
 @RequestMapping("/api")
 public class Controller {
 
   private final AuthService authService;
+  private final UserService userService;
 
   @Autowired
-  public Controller(AuthService authService) {
+  public Controller(AuthService authService, UserService userService) {
     this.authService = authService;
+    this.userService = userService;
   }
 
   @GetMapping("/")
@@ -37,5 +41,11 @@ public class Controller {
   @GetMapping("/check")
   public boolean check(@RequestParam String session) {
     return authService.getUserIdBySession(session) != null;
+  }
+
+  @GetMapping("/user")
+  public User getUser(@RequestParam String session) {
+    String userId = authService.getUserIdBySession(session);
+    return userService.getUser(userId);
   }
 }

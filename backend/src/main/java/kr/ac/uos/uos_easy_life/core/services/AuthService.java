@@ -59,7 +59,6 @@ public class AuthService {
         // 새로운 사용자를 생성한다.
         user = new User(id, userInfo.getName(), userInfo.getStudentId(), 1, 1, portalId, "", "");
         user.setPassword(portalPassword);
-        System.out.println(user);
 
         // 사용자를 DB에 저장한다.
         userRepository.save(user);
