@@ -3,8 +3,13 @@ set -e
 cd `dirname $0`/..
 ROOT=`pwd`
 
-# Build
 build
 
-# Run
-java -jar backend/build/libs/*-SNAPSHOT.jar
+# Start the backend
+cd $ROOT/backend
+java -jar build/libs/*-SNAPSHOT.jar&
+
+# Start the frontend
+cd $ROOT/frontend
+yarn
+yarn dev

@@ -27,5 +27,8 @@
 	"postCreateCommand": "scripts/init.sh",
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/${containerWorkspaceFolder}/scripts"
-	}
+	},
+	"forwardPorts": [
+		5173
+	]
 }
