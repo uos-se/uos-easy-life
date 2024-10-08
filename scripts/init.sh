@@ -1,2 +1,2 @@
-npx playwright install --with-deps chromium
+npx -y playwright install --with-deps chromium
 echo Initialized.
