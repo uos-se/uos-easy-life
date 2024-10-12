@@ -43,7 +43,7 @@ public class UosApiImpl implements UosApi {
   }
 
   @Override
-  public List<Course> getCourseList(UosSession portalSession) {
+  public List<Course> getUserCourseList(UosSession portalSession) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getCourseList'");
   }

@@ -8,5 +8,5 @@ import kr.ac.uos.uos_easy_life.core.model.UosSession;
 public interface UosApi {
   public UserBasicInfo getUserInfo(UosSession session);
 
-  public List<Course> getCourseList(UosSession session);
+  public List<Course> getUserCourseList(UosSession session);
 }
