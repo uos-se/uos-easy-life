@@ -23,6 +23,9 @@ public class User {
   private String hashedPortalPassword; // 해시된 비밀번호
   private String salt; // 솔트
 
+  // 메타데이터
+  private long createdAt; // 생성일
+  private long updatedAt; // 업데이트일
 
   private static String hashPassword(String password, String salt) {
     int iteration = 10000;
@@ -76,6 +79,17 @@ public class User {
     this.portalId = portalId;
     this.hashedPortalPassword = hashedPassword;
     this.salt = salt;
+
+    /**
+     * 아래와 같이 엔티티 클래스 내부에서 시간 등 사이드 이펙트가 있는 코드를 작성하는 것은 좋지 않다. 그러나 이를 리팩토링하는 것은 어렵지 않으므로 프로젝트 초기에는
+     * 이렇게 작성한다. 나중에 프로젝트가 커지면 이를 리팩토링하여 최대한 사이드 이펙트가 없도록 리팩토링해야한다.
+     */
+    this.createdAt = System.currentTimeMillis();
+    this.updatedAt = -1;
+  }
+
+  private void updateTimestamp() {
+    this.updatedAt = System.currentTimeMillis();
   }
 
   public String getId() {
@@ -103,6 +117,7 @@ public class User {
       throw new IllegalArgumentException("학년은 1~5 사이의 값만 허용됩니다.");
     }
     this.currentGrade = currentGrade;
+    this.updateTimestamp();
   }
 
   public int getCurrentSemester() {
@@ -114,6 +129,7 @@ public class User {
       throw new IllegalArgumentException("학기는 1, 2만 허용됩니다.");
     }
     this.currentSemester = currentSemester;
+    this.updateTimestamp();
   }
 
   public String getPortalId() {
@@ -131,11 +147,20 @@ public class User {
   public String setPassword(String password) {
     this.salt = getNewSalt();
     this.hashedPortalPassword = hashPassword(password, salt);
+    this.updateTimestamp();
     return hashedPortalPassword;
   }
 
   public boolean checkPassword(String password) {
     return hashPassword(password, salt).equals(hashedPortalPassword);
+  }
+
+  public long getCreatedAt() {
+    return createdAt;
+  }
+
+  public long getUpdatedAt() {
+    return updatedAt;
   }
 
   @Override
