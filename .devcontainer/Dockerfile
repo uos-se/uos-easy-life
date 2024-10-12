@@ -11,6 +11,7 @@ ENV LANG en_US.UTF-8
 COPY javainstall.sh /tmp/javainstall.sh
 RUN chmod +x /tmp/javainstall.sh && /tmp/javainstall.sh
 
-# Install git-crypt
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get -y install git-crypt
+# Install required tools
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install \
+  git-crypt\
+  supervisor
