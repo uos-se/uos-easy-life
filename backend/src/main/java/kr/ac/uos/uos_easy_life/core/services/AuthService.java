@@ -19,7 +19,6 @@ public class AuthService {
   private final UosSessionManager uosPortalSessionManager;
   private final UosApi uosPortalApi;
 
-  @Autowired
   public AuthService(UserRepository userRepository, SessionRepository sessionRepository,
       UosSessionManager uosPortalSessionManager, UosApi uosPortalApi) {
     this.userRepository = userRepository;
