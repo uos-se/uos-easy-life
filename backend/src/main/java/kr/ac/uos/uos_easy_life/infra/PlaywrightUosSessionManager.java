@@ -13,6 +13,8 @@ import com.microsoft.playwright.BrowserType.LaunchOptions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.Cookie;
+
+import jakarta.annotation.PostConstruct;
 import kr.ac.uos.uos_easy_life.core.interfaces.UosSessionManager;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 
@@ -95,12 +97,10 @@ public class PlaywrightUosSessionManager implements UosSessionManager {
     }
 
     try {
-      HttpRequest request =
-          HttpRequest.newBuilder().uri(URI.create("https://portal.uos.ac.kr/uos/SessionCheck.eps"))
-              .GET().header("Cookie", "JSESSIONID=" + session).build();
+      HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://portal.uos.ac.kr/uos/SessionCheck.eps"))
+          .GET().header("Cookie", "JSESSIONID=" + session).build();
       HttpClient client = HttpClient.newHttpClient();
-      HttpResponse<String> response =
-          client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
       if (response.statusCode() != 200) {
         return false;
       }
@@ -109,5 +109,20 @@ public class PlaywrightUosSessionManager implements UosSessionManager {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  @PostConstruct
+  public void init() {
+    /**
+     * Playwright는 맨 처음 실행될 때 Chrome 등의 의존성을 다운로드 받는다.
+     * 이 작업은 시간이 오래 걸리므로 서버가 시작될 때 미리 Playwright를 초기화해둔다.
+     * `@PostConstruct` 어노테이션을 사용하면 스프링 빈이 생성될 때 해당 메소드가 실행된다.
+     */
+    Playwright playwright = Playwright.create();
+    LaunchOptions options = new LaunchOptions();
+    options.setHeadless(true);
+    Browser browser = playwright.chromium().launch(options);
+    browser.close();
+    playwright.close();
   }
 }
