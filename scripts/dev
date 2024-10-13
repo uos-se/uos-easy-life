@@ -3,6 +3,15 @@ set -e
 cd `dirname $0`/..
 ROOT=`pwd`
 
+cleanup() {
+  echo "Cleaning up..."
+  pkill -P $$ || true
+  exit 0
+}
+
+trap cleanup SIGINT SIGTERM
+
+# Build the backend
 build
 
 # Start the backend
@@ -12,4 +21,9 @@ java -jar build/libs/*-SNAPSHOT.jar&
 # Start the frontend
 cd $ROOT/frontend
 yarn
-yarn dev
+yarn dev&
+
+# Sleep forever
+while true; do
+  sleep 1
+done
