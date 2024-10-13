@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Get key from user
+echo -n "Enter key: "
+read -s KEY
+echo
+
+# Unlock git-crypth with key
+TMPFILE=$(mktemp)
+echo $KEY | base64 -d > $TMPFILE
+git-crypt unlock $TMPFILE
+SUCCESS=$?
+rm $TMPFILE
+
+if [ $SUCCESS -eq 0 ]; then
+    echo -e "\033[0;32mUnlocked\033[0m"
+else
+    echo -e "\033[0;31mFailed to unlock\033[0m"
+fi
