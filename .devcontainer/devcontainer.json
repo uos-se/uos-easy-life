@@ -18,7 +18,8 @@
 				"wayou.vscode-todo-highlight",
 				"GitHub.copilot",
 				"dbaeumer.vscode-eslint",
-				"yoavbls.pretty-ts-errors"
+				"yoavbls.pretty-ts-errors",
+				"redhat.java"
 			]
 		}
 	},
