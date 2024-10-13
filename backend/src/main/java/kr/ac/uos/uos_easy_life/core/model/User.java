@@ -5,7 +5,6 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -14,7 +13,7 @@ public class User {
   private String id; // 우리 서비스 내 사용자 고유 ID
   private String name; // 이름
   private String studentId; // 학번
-  private List<Department> departments;// 학과
+  private Department department;// 학과
   private int currentGrade; // 학년
   private int currentSemester; // 학기
 
@@ -73,6 +72,14 @@ public class User {
     }
     this.studentId = studentId;
 
+    // 학과는 학번의 5-6번째 자리에 해당하는 학과 코드로부터 추출한다.
+    int departmentsCode = Integer.parseInt(studentId.substring(4, 6));
+    Department department = Department.fromDepartmentCode(departmentsCode);
+    if (department == null) {
+      throw new IllegalArgumentException("학과 코드가 잘못되었습니다.");
+    }
+    this.department = department;
+
     this.setCurrentGrade(currentGrade);
     this.setCurrentSemester(currentSemester);
 
@@ -81,8 +88,8 @@ public class User {
     this.salt = salt;
 
     /**
-     * 아래와 같이 엔티티 클래스 내부에서 시간 등 사이드 이펙트가 있는 코드를 작성하는 것은 좋지 않다. 그러나 이를 리팩토링하는 것은 어렵지 않으므로 프로젝트 초기에는
-     * 이렇게 작성한다. 나중에 프로젝트가 커지면 이를 리팩토링하여 최대한 사이드 이펙트가 없도록 리팩토링해야한다.
+     * 아래와 같이 엔티티 클래스 내부에서 시간 등 사이드 이펙트가 있는 코드를 작성하는 것은 좋지 않다. 그러나 이를 리팩토링하는 것은 어렵지
+     * 않으므로 프로젝트 초기에는 이렇게 작성한다. 나중에 프로젝트가 커지면 이를 리팩토링하여 최대한 사이드 이펙트가 없도록 리팩토링해야한다.
      */
     this.createdAt = System.currentTimeMillis();
     this.updatedAt = -1;
@@ -104,8 +111,8 @@ public class User {
     return studentId;
   }
 
-  public List<Department> getDepartments() {
-    return departments;
+  public Department getDepartment() {
+    return department;
   }
 
   public int getCurrentGrade() {
@@ -166,7 +173,7 @@ public class User {
   @Override
   public String toString() {
     return "User{" + "name='" + name + '\'' + ", studentId='" + studentId + '\'' + ", department="
-        + departments + ", currentGrade=" + currentGrade + ", currentSemester=" + currentSemester
+        + department + ", currentGrade=" + currentGrade + ", currentSemester=" + currentSemester
         + '}';
   }
 }
