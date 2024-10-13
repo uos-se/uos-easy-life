@@ -5,7 +5,8 @@ const LOCAL_STORAGE_KEY = "uos-easy-life-session";
 
 const validateSessionKey = async (session: string) => {
   const res = await fetch(`/api/user?session=${session}`);
-  return res.status === 200;
+  const text = await res.text();
+  return res.status === 200 && !!text;
 };
 
 const createSession = async (id: string, password: string) => {
@@ -18,7 +19,10 @@ const createSession = async (id: string, password: string) => {
       },
     }
   );
-  return await res.text();
+  const token = await res.text();
+  if (res.status !== 200) return null;
+  if (!token) return null;
+  return token;
 };
 
 export function SessionContextProvider({
