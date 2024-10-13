@@ -4,8 +4,9 @@ cd `dirname $0`/..
 ROOT=`pwd`
 
 cleanup() {
-  echo "Cleaning up..."
+  echo -e "\rCleaning up..."
   pkill -P $$ || true
+  echo "Done."
   exit 0
 }
 
