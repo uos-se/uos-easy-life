@@ -1,7 +1,5 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
-  "java.format.settings.profile": "GoogleStyle",
   "editor.formatOnSave": true,
   "java.configuration.updateBuildConfiguration": "automatic",
   "cSpell.words": [
