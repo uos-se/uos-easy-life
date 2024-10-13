@@ -4,6 +4,12 @@ metadata:
   namespace: uos-easy-life
   name: uos-easy-life-role
 rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["create", "get", "list", "watch", "update", "delete"]
+  - apiGroups: ["traefik.containo.us"]
+    resources: ["ingressroutes", "middlewares"]
+    verbs: ["create", "get", "list", "watch", "update", "delete"]
   - apiGroups: [""]
-    resources: ["pods", "services", "configmaps"]
-    verbs: ["get", "list", "watch", "create", "update", "delete"]
+    resources: ["pods", "secrets", "services"]
+    verbs: ["create", "get", "list", "watch", "update", "delete"]
