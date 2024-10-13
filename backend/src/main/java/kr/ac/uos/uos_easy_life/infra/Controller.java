@@ -54,4 +54,11 @@ public class Controller {
     String userId = authService.getUserIdBySession(session);
     return userService.getUserFullInfo(userId);
   }
+
+  @GetMapping("/user/sync")
+  public void syncUser(@RequestParam String session, @RequestParam String portalId,
+      @RequestParam String portalPassword) {
+    String userId = authService.getUserIdBySession(session);
+    userService.syncUser(userId, portalId, portalPassword);
+  }
 }
