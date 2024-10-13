@@ -25,7 +25,8 @@
 	},
 	"postCreateCommand": "scripts/init.sh",
 	"remoteEnv": {
-		"PATH": "${containerEnv:PATH}:/${containerWorkspaceFolder}/scripts"
+		"PATH": "${containerEnv:PATH}:/${containerWorkspaceFolder}/scripts",
+		"KUBECONFIG": "${containerWorkspaceFolder}/kubernetes/account/secret-kubeconfig.yaml"
 	},
 	"forwardPorts": [
 		5173
