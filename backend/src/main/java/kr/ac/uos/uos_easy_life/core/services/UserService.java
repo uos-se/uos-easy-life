@@ -63,7 +63,7 @@ public class UserService {
     if (user == null) {
       throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
     }
-    if (user.getPortalId() != portalId) {
+    if (!user.getPortalId().equals(portalId)) {
       throw new IllegalArgumentException("포탈 아이디가 일치하지 않습니다.");
     }
     user.checkPassword(portalPassword);
@@ -77,6 +77,10 @@ public class UserService {
     // Register courses
     for (String courseCode : courseCodes) {
       Course course = courseRepository.findByCode(courseCode);
+      if (course == null) {
+        System.out.println("강의가 존재하지 않습니다. 강의코드: " + courseCode);
+        continue;
+      }
       registrationRepository.register(userId, course.getId());
     }
   }

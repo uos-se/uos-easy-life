@@ -2,7 +2,7 @@ package kr.ac.uos.uos_easy_life.core.model;
 
 public class Course {
   // TODO: 이 클래스를 구현해야 한다.
-  private String id; // 사용자 ID
+  private String id; // 서비스 내 고유 ID
   private String lectureName; // 강의명
   private String lectureCode; // 강의 코드
   private int lectureCredit; // 학점
