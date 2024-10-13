@@ -1,12 +1,13 @@
 package kr.ac.uos.uos_easy_life.infra;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import kr.ac.uos.uos_easy_life.core.model.User;
+import kr.ac.uos.uos_easy_life.core.model.UserFullInfo;
 import kr.ac.uos.uos_easy_life.core.services.AuthService;
 import kr.ac.uos.uos_easy_life.core.services.UserService;
 
@@ -46,5 +47,11 @@ public class Controller {
   public User getUser(@RequestParam String session) {
     String userId = authService.getUserIdBySession(session);
     return userService.getUser(userId);
+  }
+
+  @GetMapping("/user/full")
+  public UserFullInfo getUserFullInfo(@RequestParam String session) {
+    String userId = authService.getUserIdBySession(session);
+    return userService.getUserFullInfo(userId);
   }
 }

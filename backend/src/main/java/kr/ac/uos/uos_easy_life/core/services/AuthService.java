@@ -1,15 +1,16 @@
 package kr.ac.uos.uos_easy_life.core.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
+
 import kr.ac.uos.uos_easy_life.core.interfaces.SessionRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
 import kr.ac.uos.uos_easy_life.core.interfaces.UosSessionManager;
 import kr.ac.uos.uos_easy_life.core.interfaces.UserRepository;
-import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.User;
-import java.util.UUID;
+import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
 
 @Service
 public class AuthService {
