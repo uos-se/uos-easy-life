@@ -1,0 +1,43 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`uos.unknownpgr.com`) && PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: backend
+          port: 80
+    - match: Host(`uos.unknownpgr.com`)
+      kind: Rule
+      services:
+        - name: frontend
+          port: 80
+  tls: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: https-redirection
+spec:
+  redirectScheme:
+    scheme: https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-frontend-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`uos.unknownpgr.com`)
+      services:
+        - name: frontend
+          port: 80
+      middlewares:
+        - name: https-redirection
