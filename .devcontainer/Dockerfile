@@ -14,3 +14,8 @@ RUN chmod +x /tmp/javainstall.sh && /tmp/javainstall.sh
 # Install required tools
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install \
   git-crypt
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/v1.31.1/bin/linux/amd64/kubectl" && \
+  chmod +x ./kubectl && \
+  mv ./kubectl /usr/local/bin/kubectl
