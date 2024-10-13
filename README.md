@@ -57,10 +57,7 @@ UOS Easy Life는 복잡한 학교 학사 정보 시스템의 접근성을 개선
 - **Git**: 버전 관리를 위한 분산형 VCS (Version Control System)
 - **Swagger**: REST API 문서화를 위한 오픈소스 툴
 
-## 설치 및 실행 방법
+## 개발 문서
 
-1. `git clone https://github.com/username/uos-easy-life.git`
-1. VS Code에 `Dev Container` 확장 프로그램 설치
-1. `Dev container` 실행 (`Ctrl+Shift+P` -> `Reopen in Container`)
-1. `dev`
-1. `http://localhost:5173` 접속
+- 설계 문서: [docs/design.md](docs/design.md)
+- 기여 방법: [docs/contributing.md](docs/contributing.md)
