@@ -2,7 +2,9 @@ package kr.ac.uos.uos_easy_life.core.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
+
 import kr.ac.uos.uos_easy_life.core.interfaces.CourseRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.RegistrationRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
@@ -70,8 +72,11 @@ public class UserService {
     UosSession session = uosSessionManager.createUosSession(portalId, portalPassword);
 
     // Retrieve user course information
-    List<Course> courses = uosApi.getUserCourseList(session);
-    for (Course course : courses) {
+    List<String> courseCodes = uosApi.getUserCourseCodes(session, user.getStudentId());
+
+    // Register courses
+    for (String courseCode : courseCodes) {
+      Course course = courseRepository.findByCode(courseCode);
       registrationRepository.register(userId, course.getId());
     }
   }
