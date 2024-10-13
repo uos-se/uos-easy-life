@@ -4,11 +4,11 @@ public class Course {
   // TODO: 이 클래스를 구현해야 한다.
   private String id; // 사용자 ID
   private String lectureName; // 강의명
-  private int lectureCode; // 강의 코드
+  private String lectureCode; // 강의 코드
   private int lectureCredit; // 학점
   private int lectureGrade; // 학년
 
-  public Course(String id, String lectureName, int lectureCode, int lectureCredit,
+  public Course(String id, String lectureName, String lectureCode, int lectureCredit,
       int lectureGrade) {
     this.id = id;
     this.lectureName = lectureName;
@@ -25,7 +25,7 @@ public class Course {
     return lectureName;
   }
 
-  public int getLectureCode() {
+  public String getLectureCode() {
     return lectureCode;
   }
 

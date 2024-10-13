@@ -6,6 +6,8 @@ import kr.ac.uos.uos_easy_life.core.model.Course;
 public interface CourseRepository {
   public Course findById(String id);
 
+  public Course findByCode(String code);
+
   public List<Course> findAll();
 
   public void save(Course course);
