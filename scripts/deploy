@@ -1,0 +1,261 @@
+#!/usr/bin/env node
+
+const { spawn } = require("child_process");
+const { createHash } = require("crypto");
+const { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } = require("fs");
+const { resolve, join, dirname } = require("path");
+const config = require("./secret-config.json");
+
+const start = new Date();
+let lastPrint = start;
+
+const COLORS = {
+  reset: "\x1b[0m",
+  bright: "\x1b[1m",
+  dim: "\x1b[2m",
+  underscore: "\x1b[4m",
+  blink: "\x1b[5m",
+  reverse: "\x1b[7m",
+  hidden: "\x1b[8m",
+
+  fg: {
+    black: "\x1b[30m",
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    yellow: "\x1b[33m",
+    blue: "\x1b[34m",
+    magenta: "\x1b[35m",
+    cyan: "\x1b[36m",
+    white: "\x1b[37m",
+  },
+  bg: {
+    black: "\x1b[40m",
+    red: "\x1b[41m",
+    green: "\x1b[42m",
+    yellow: "\x1b[43m",
+    blue: "\x1b[44m",
+    magenta: "\x1b[45m",
+    cyan: "\x1b[46m",
+    white: "\x1b[47m",
+  },
+};
+
+function log(message, color = COLORS.reset, effect = COLORS.reset) {
+  const now = new Date();
+  const time = ((now - start) / 1000).toFixed(2);
+  const diff = ((now - lastPrint) / 1000).toFixed(2);
+  lastPrint = now;
+  console.log(`${color}[${time}s][+${diff}] ${message}${COLORS.reset}`);
+}
+
+function isExists(path) {
+  try {
+    return statSync(path);
+  } catch {
+    return false;
+  }
+}
+
+function hashDirectory(
+  path,
+  ignore = [/node_modules/, /.cache/, /.git/, /__pycache__/, /build-ignore/, /dist/],
+) {
+  if (ignore.some((ignorePath) => path.match(ignorePath)) || !isExists(path)) return "";
+
+  const stats = statSync(path);
+  if (stats.isDirectory()) {
+    const files = readdirSync(path).sort();
+    const hash = createHash("md5");
+    for (const file of files) {
+      hash.update(hashDirectory(resolve(path, file), ignore));
+    }
+    return hash.digest("hex");
+  }
+
+  if (stats.isFile()) {
+    const hash = createHash("md5");
+    hash.update(readFileSync(path));
+    return hash.digest("hex");
+  }
+}
+
+async function cmd(command, options = { print: false, exitOnNonZeroCode: true }) {
+  const ret = await new Promise((resolve, reject) => {
+    let stdout = "";
+    let stderr = "";
+
+    let buffer = "";
+
+    const tempPrint = (data) => {
+      buffer += data;
+      if (!buffer.includes("\n")) return;
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+      for (let line of lines) {
+        if (line.length > 80) line = line.slice(0, 77) + "...";
+        if (line.length < 80) line = line.padEnd(80, " ");
+        process.stdout.write(line + "\r");
+      }
+    };
+
+    const child = spawn(command, { shell: true });
+    child.stdout.on("data", (data) => {
+      stdout += data;
+      if (options.print) process.stdout.write(data);
+      else tempPrint(data);
+    });
+    child.stderr.on("data", (data) => {
+      stderr += data;
+      if (options.print) process.stderr.write(data);
+      else tempPrint(data);
+    });
+    child.on("exit", (code) => {
+      if (code !== 0 && options.exitOnNonZeroCode) {
+        console.error(COLORS.fg.red, stdout, COLORS.reset);
+        console.error(COLORS.fg.red, stderr, COLORS.reset);
+        process.exit(code);
+      } else {
+        resolve({ stdout, stderr, code });
+      }
+    });
+  });
+  process.stdout.write("".padEnd(80, " ") + "\r");
+  return ret;
+}
+
+async function build(
+  buildDirectory,
+  imageName,
+  cacheDir = ".cache",
+  cacheNameDir = ".cache/name",
+  cacheLayerDir = ".cache/layers",
+) {
+  const buildDirStats = isExists(buildDirectory);
+  if (!buildDirStats || !buildDirStats.isDirectory()) {
+    log(`Build directory (${buildDirectory}) does not exist or is not a directory`, COLORS.fg.red);
+    process.exit(1);
+  }
+
+  if (!isExists(join(buildDirectory, "Dockerfile"))) {
+    log(`Build directory (${buildDirectory}) does not have Dockerfile`, COLORS.fg.red);
+    process.exit(1);
+  }
+
+  mkdirSync(cacheDir, { recursive: true });
+  mkdirSync(cacheNameDir, { recursive: true });
+  mkdirSync(cacheLayerDir, { recursive: true });
+
+  const tag = hashDirectory(buildDirectory);
+  const name = `${imageName}:${tag}`;
+  const nameHash = createHash("md5").update(name).digest("hex");
+  const cachePath = join(cacheNameDir, nameHash);
+
+  if (isExists(cachePath)) return name;
+
+  await cmd(`docker buildx create --name buildx`, { exitOnNonZeroCode: false });
+  await cmd(`docker buildx use buildx`);
+  const buildCommand = [
+    `docker buildx build`,
+    `--platform linux/amd64`,
+    `--cache-to type=local,dest=${cacheLayerDir},mode=max`,
+    `--cache-from type=local,src=${cacheLayerDir}`,
+    `-t ${name}`,
+    `--push`,
+    buildDirectory,
+  ].join(" ");
+
+  const { stdout, stderr, code } = await cmd(buildCommand, { exitOnNonZeroCode: false });
+  if (code !== 0) {
+    log(`Failed to build ${imageName} with following error`, COLORS.fg.red);
+    console.error(COLORS.fg.red, stdout, COLORS.reset);
+    console.error(COLORS.fg.red, stderr, COLORS.reset);
+    process.exit(code);
+  }
+
+  writeFileSync(cachePath, "");
+
+  return name;
+}
+
+async function dockerLogin(registry, username, password) {
+  const dockerConfigPath = `${process.env.HOME}/.docker/config.json`;
+
+  // If config has credential store, drop it, because sometimes it causes issues
+  if (isExists(dockerConfigPath)) {
+    const dockerConfig = readFileSync(dockerConfigPath, {
+      encoding: "utf-8",
+    });
+    const config = JSON.parse(dockerConfig);
+    if (config.credsStore) {
+      delete config.credsStore;
+      writeFileSync(dockerConfigPath, JSON.stringify(config, null, 2));
+    }
+  }
+
+  await cmd(`docker login ${registry} -u '${username}' -p '${password}'`, { print: true });
+}
+
+async function main() {
+  process.chdir(dirname(process.argv[1]));
+
+  const logo =
+    "CiAgIF9fX18gICAgIF9fICBfXyAgX19fX19fICAgX18gICAgICAgX19fXyAgICBfX19fX18gIF9fX19fICAgX1" +
+    "9fX18gICBfXyAgICAgICAgICBfXyAgX18gICAgIF8gICAgIAogIC9cICBfYFwgIC9cIFwvXCBcL1xfXyAgX1wg" +
+    "L1wgXCAgICAgL1wgIF9gXCAvXF9fICBfXC9cICBfX2BcL1wgIF9fYFwvXCBcICAgICAgICAvXCBcL1wgXCAgLy" +
+    "cgXCAgICAKICBcIFwgXExcIFxcIFwgXCBcIFwvXy9cIFwvIFwgXCBcICAgIFwgXCBcL1wgXC9fL1wgXC9cIFwg" +
+    "XC9cIFwgXCBcL1wgXCBcIFwgICAgICAgXCBcIFwgXCBcL1xfLCBcICAgCiAgIFwgXCAgXyA8J1wgXCBcIFwgXC" +
+    "BcIFwgXCAgXCBcIFwgIF9fXCBcIFwgXCBcIFwgXCBcIFwgXCBcIFwgXCBcIFwgXCBcIFwgXCAgX18gICBcIFwg" +
+    "XCBcIFwvXy9cIFwgIAogICAgXCBcIFxMXCBcXCBcIFxfXCBcIFxfXCBcX19cIFwgXExcIFxcIFwgXF9cIFwgXC" +
+    "BcIFwgXCBcIFxfXCBcIFwgXF9cIFwgXCBcTFwgXCAgIFwgXCBcXy8gXCBcIFwgXCAKICAgICBcIFxfX19fLyBc" +
+    "IFxfX19fX1wvXF9fX19fXFwgXF9fX18vIFwgXF9fX18vICBcIFxfXCBcIFxfX19fX1wgXF9fX19fXCBcX19fXy" +
+    "8gICAgXCBgXF9fXy8gIFwgXF9cCiAgICAgIFwvX19fLyAgIFwvX19fX18vXC9fX19fXy8gXC9fX18vICAgXC9f" +
+    "X18vICAgIFwvXy8gIFwvX19fX18vXC9fX19fXy9cL19fXy8gICAgICBgXC9fXy8gICAgXC9fLwogICAgICAgIC" +
+    "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg" +
+    "ICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC" +
+    "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBieSB1bmtub3ducGdyCg==";
+  const buff = Buffer.from(logo, "base64");
+  console.log(buff.toString("ascii"));
+
+  const stage = process.argv[2] || "staging";
+  if (!["production", "staging"].includes(stage)) {
+    console.error(COLORS.fg.red, "Invalid stage. Use 'production' or 'staging'", COLORS.reset);
+    console.error(COLORS.fg.red, "Empty stage will default to 'staging'", COLORS.reset);
+    process.exit(1);
+  }
+
+  log(`Target stage: ${COLORS.fg.cyan + COLORS.bright}${stage}${COLORS.reset}`, COLORS.fg.green);
+  const root = dirname(dirname(process.argv[1]));
+  const { registry, targets } = config;
+
+  await dockerLogin(registry.url, registry.username, registry.password);
+  log("Docker login successful", COLORS.fg.green);
+
+  const placeholders = {};
+  for (const target of targets) {
+    log(`Building ${target.imageName}`, COLORS.fg.blue);
+    const { directory, imageName, kubernetesPlaceholder } = target;
+    const image = await build(join(root, directory), imageName);
+    placeholders[kubernetesPlaceholder] = image;
+    log(`  ↳ ${COLORS.underscore + image}`, COLORS.fg.blue);
+  }
+
+  log("Applying Kubernetes manifest", COLORS.fg.green);
+  let { stdout: kustomize } = await cmd(`kubectl kustomize ${root}/kubernetes/overlays/${stage}`);
+  for (const [key, value] of Object.entries(placeholders)) {
+    kustomize = kustomize.replace(key, value);
+  }
+  writeFileSync(join(root, `kubernetes/overlays/${stage}/manifest.yaml`), kustomize);
+  log("Kustomize successful", COLORS.fg.green);
+
+  await cmd(`kubectl apply -f ${root}/kubernetes/overlays/${stage}/manifest.yaml`, { print: true });
+  log("Done.", COLORS.fg.green);
+}
+
+main()
+  .catch((e) => {
+    console.error(COLORS.fg.red, e, COLORS.reset);
+    process.exit(1);
+  })
+  .then(() => {
+    process.exit(0);
+  });
