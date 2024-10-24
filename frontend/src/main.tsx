@@ -1,9 +1,11 @@
+import "./index.css";
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Login } from "./pages/login/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Main } from "./pages/main/Main";
 import { SessionContextProvider } from "./context/SessionContextProvider";
+import { Login } from "./pages/login/Login";
+import { Main } from "./pages/main/Main";
 
 const router = createBrowserRouter([
   {
