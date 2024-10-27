@@ -21,7 +21,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
     setIsLoading(true)
-
     login(id, password)
     setIsLoading(false)
   }
@@ -32,7 +31,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <div className="grid gap-2">
           <div className="grid gap-3">
             <Label className="text-muted-foreground" htmlFor="id">
-              Your Portal ID
+              포털 ID
             </Label>
             <Input
               id="id"
@@ -45,11 +44,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               onChange={(e) => setId(e.target.value)}
             />
             <Label className="text-muted-foreground" htmlFor="pw">
-              Your Portal Password
+             포털 비밀번호
             </Label>
             <Input
               id="pw"
-              placeholder="password"
+              placeholder=""
               type="password"
               autoCapitalize="none"
               autoCorrect="off"
@@ -57,7 +56,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button disabled={isLoading}>
+          <Button className="bg-indigo-600" disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
