@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "../../context/useSessionContext";
-import { UserAuthForm } from "./(components)/user-auth-form";
+import { UserAuthForm } from "./components/UserAuthForm";
 
 export function Login() {
   const { session } = useSessionContext();
