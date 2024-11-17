@@ -1,0 +1,128 @@
+<diagram program="umletino" version="15.1"><zoom_level>5</zoom_level><element><id>UMLClass</id><coordinates><x>880</x><y>0</y><w>265</w><h>110</h></coordinates><panel_attributes>Course
+--
+- id: string
+- lectureName: string
+- lectureCode: string
+- lectureCredit: integer
+- lectureGrade: integer
+--
+Course(String id, String lectureName, String lectureCode, int lectureCredit, int lectureGrade)
+getId()
+getLectureName()
+getLectureCode()
+getLectureCredit()
+getLectureGrade()
+toString()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1165</x><y>0</y><w>265</w><h>80</h></coordinates><panel_attributes>Registration
+--
+- id: string
+- userId: string
+- courseId: string
+--
+Registration(String id, String userId, String courseId)
+String getId()
+getUserId()
+getCourseId()
+toString()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>645</x><y>0</y><w>215</w><h>70</h></coordinates><panel_attributes>Department
+--
+- departmentCode: integer
+- departmentName: string
+--
+Department(int departmentCode, String departmentName)
+fromDepartmentCode(int departmentCode)
+getDepartmentCode()
+getDepartmentName()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>0</y><w>390</w><h>275</h></coordinates><panel_attributes>User
+--
+- id: string
+- name: string
+- studentId: string
+- department: Department
+- currentGrade: integer
+- currentSemester: integ
+- portalId: string
+- hashedPortalPassword: string
+- salt: string
+--
+User(String id, String name, String studentId, int currentGrade, int currentSemester, String portalId, String hashedPassword, String salt)
+hashPassword(String password, String salt)
+getNewSalt()
+getId()
+getName()
+getStudentId
+getDepartment
+setCurrentGrade(int currentGrade)
+setCurrentSemester(int currentSemester)
+setPassword(String password)
+getPortalId()
+getHashedPortalPassword()
+getSalt()
+getCreatedAt()
+getUpdatedAt()
+setCurrentGrade()
+setCurrentSemester()
+setPassword()
+checkPassword()
+updateTimestamp()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>0</y><w>215</w><h>80</h></coordinates><panel_attributes>UosSession
+--
+- portalSession:string
+- wiseSession: string
+- uclassSession: string
+--
+UosSession(String portalSession, String wiseSession, String uclassSession)
+getPortalSession()
+getWiseSession()
+getUclassSession()
+toString()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>130</x><y>725</y><w>435</w><h>80</h></coordinates><panel_attributes>AuthService
+--
+- userRepository
+- sessionRepository
+- uosPortalSessionManager
+- uosPortalApi
+--
+AuthService(UserRepository userRepository, SessionRepository sessionRepository, UosSessionManager uosPortalSessionManager, UosApi uosPortalApi)
+login(String portalId, String portalPassword)
+logout(String session)
+getUserIdBySession(String session)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>895</x><y>715</y><w>535</w><h>85</h></coordinates><panel_attributes>UserService
+--
+- userRepository
+- courseRepository
+- registrationRepository
+- uossessionManager
+- uosApi
+--
+UserService(UserRepository userRepository, CourseRepository courseRepository, RegistrationRepository registrationRepository, UosSessionManager uosSessionManager, UosApi uosApi)
+getUser(String userId)
+getUserFullInfo(String userId)
+syncUser(String userId, String portalId, String portalPassword)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1050</x><y>380</y><w>235</w><h>70</h></coordinates><panel_attributes>RegistrationRepository&lt;i&gt;
+--
+findById(String id)
+findByCode(String code)
+findAll()
+save(Course course)
+update(Course course)
+deleteById(String id)
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>385</y><w>230</w><h>50</h></coordinates><panel_attributes>UosApi&lt;i&gt;
+--
+getUserInfo(UosSession session)
+getUserCourseCodes(UosSession session, String studentId)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>555</x><y>385</y><w>230</w><h>50</h></coordinates><panel_attributes>CourseRepository&lt;i&gt;
+--
+register(String userId, String courseId)
+unregister(String userId, String courseId)
+findRegisteredCourses(String userId)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>385</y><w>230</w><h>50</h></coordinates><panel_attributes>SessionRepository&lt;i&gt;
+--
+createSession(String userId)
+getUserIdBySession(String session)
+deleteSession(String session)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>310</x><y>385</y><w>230</w><h>50</h></coordinates><panel_attributes>UosSessionManager&lt;i&gt;
+--
+createUosSession(String portalId, String portalPassword)
+isSessionValid(UosSession session)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1310</x><y>380</y><w>230</w><h>60</h></coordinates><panel_attributes>UserRepository&lt;i&gt;
+--
+findById(String id)
+findByPortalId(String portalId)
+save(User user)
+update(User user)
+deleteById(String id)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>435</y><w>1095</w><h>300</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>2170;10;10;580</additional_attributes></element></diagram>

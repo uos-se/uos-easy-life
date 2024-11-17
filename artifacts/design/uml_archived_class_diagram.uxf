@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>427</y>
+      <w>147</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>Course
+--
+- id: string
+- lectureName: string
+- lectureCode: string
+- lectureCredit: integer
+- lectureGrade: integer
+- type: string
+--
+checkPrerequisites(): boolean</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>308</x>
+      <y>245</y>
+      <w>196</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>Registration
+--
+- id: string
+- userId: string
+- courseId: string
+--
+checkMajor(): integer //전공학점확인
+checkGeneral(): integer //교양학점확인
+checkRequiredMajor(): integer //전공필수
+checkRequiredGeneral(): integer //교약필수
+checkSelectiveMajor(): integer //전공선택
+checkSelectiveGeneral(): integer //교양선택</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>546</x>
+      <y>84</y>
+      <w>147</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Department
+--
+- departmentCode: integer
+- departmentName: string
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>308</x>
+      <y>35</y>
+      <w>147</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>User
+--
+- id: string
+- name: string
+- studentId: string
+- department: Department
+- currentGrade: integer
+- currentSemester: integer
+- portalId: string
+- hashedPortalPassword: string
+- salt: string
+--
+hashPassword(password: string, salt: strint): string
+checkRegistrationStatus()
+viewAvailableCourses: Course[]
+login()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>546</x>
+      <y>231</y>
+      <w>147</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>UosSession
+--
+- portalSession:string
+- wiseSession: string
+- uclassSession: string
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>553</x>
+      <y>448</y>
+      <w>147</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Irunet
+--
+--
+fetchCourse(): Course
+fetchRegistration(): Registration
+fetchSession(): UosSession</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>462</y>
+      <w>315</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>calls for</panel_attributes>
+    <additional_attributes>10.0;20.0;430.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>371</y>
+      <w>259</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>calls for</panel_attributes>
+    <additional_attributes>350.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>448</x>
+      <y>105</y>
+      <w>112</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>196</y>
+      <w>28</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>448</x>
+      <y>196</y>
+      <w>189</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>calls for</panel_attributes>
+    <additional_attributes>10.0;10.0;250.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>182</y>
+      <w>147</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Plan
+--
+- planId: string
+- courseId: string
+--
+verifyPlan():boolean</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>175</x>
+      <y>105</y>
+      <w>147</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1
+observes</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;20.0;190.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>175</x>
+      <y>238</y>
+      <w>49</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+callsfor</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;270.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>294</y>
+      <w>56</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>calls for</panel_attributes>
+    <additional_attributes>10.0;220.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>182</x>
+      <y>518</y>
+      <w>140</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>prerequisites</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;70.0;180.0;70.0;180.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>371</y>
+      <w>70</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+</diagram>
