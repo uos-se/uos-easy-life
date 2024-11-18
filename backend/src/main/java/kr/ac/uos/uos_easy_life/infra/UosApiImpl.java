@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
+import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 
 @Component
 public class UosApiImpl implements UosApi {
@@ -73,5 +74,33 @@ public class UosApiImpl implements UosApi {
         } catch (IOException | InterruptedException | JSONException e) {
             return null;
         }
+    }
+
+    @Override
+    public UserAcademicStatus getUserAcademicStatus(UosSession session, String studentId) {
+        // TODO: Implement this method
+        // Mock data
+        int totalCompletedCredit = 120;
+        int majorCompletedCredit = 60;
+        int liberalCompletedCredit = 30;
+        int generalCompletedCredit = 30;
+        double totalGradePointAverage = 3.5;
+
+        return new UserAcademicStatus(totalCompletedCredit, majorCompletedCredit, liberalCompletedCredit,
+                generalCompletedCredit, totalGradePointAverage);
+    }
+
+    @Override
+    public boolean isLanguageCertificationCompleted(UosSession session, String studentId) {
+        // TODO: Implement this method
+        // Mock data
+        return true;
+    }
+
+    @Override
+    public boolean isVolunteerCompleted(UosSession session, String studentId) {
+        // TODO: Implement this method
+        // Mock data
+        return true;
     }
 }
