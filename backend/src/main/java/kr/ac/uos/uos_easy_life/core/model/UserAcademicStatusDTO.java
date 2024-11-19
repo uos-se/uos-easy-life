@@ -13,6 +13,10 @@ public class UserAcademicStatusDTO {
     private int liberalRequiredCredit;
     // 교양이수학점
     private int liberalCompletedCredit;
+    // 공학소양요구학점
+    private int engineeringRequiredCredit;
+    // 공학소양이수학점
+    private int engineeringCompletedCredit;
     // 일반선택요구학점
     private int generalRequiredCredit;
     // 일반선택이수학점
@@ -29,6 +33,8 @@ public class UserAcademicStatusDTO {
             int majorCompletedCredit,
             int liberalRequiredCredit,
             int liberalCompletedCredit,
+            int engineeringRequiredCredit,
+            int engineeringCompletedCredit,
             int generalRequiredCredit,
             int generalCompletedCredit,
             double minimumTotalGradePointAverage,
@@ -39,6 +45,8 @@ public class UserAcademicStatusDTO {
         this.majorCompletedCredit = majorCompletedCredit;
         this.liberalRequiredCredit = liberalRequiredCredit;
         this.liberalCompletedCredit = liberalCompletedCredit;
+        this.engineeringRequiredCredit = engineeringRequiredCredit;
+        this.engineeringCompletedCredit = engineeringCompletedCredit;
         this.generalRequiredCredit = generalRequiredCredit;
         this.generalCompletedCredit = generalCompletedCredit;
         this.minimumTotalGradePointAverage = minimumTotalGradePointAverage;
@@ -69,6 +77,13 @@ public class UserAcademicStatusDTO {
         return liberalCompletedCredit;
     }
 
+    public int getEngineeringRequiredCredit(){
+        return engineeringRequiredCredit; 
+    }
+
+    public int getEngineeringCompletedCredit(){
+        return engineeringCompletedCredit;
+    }
     public int getGeneralRequiredCredit() {
         return generalRequiredCredit;
     }
@@ -94,6 +109,8 @@ public class UserAcademicStatusDTO {
                 ", majorCompletedCredit=" + majorCompletedCredit + //
                 ", liberalRequiredCredit=" + liberalRequiredCredit + //
                 ", liberalCompletedCredit=" + liberalCompletedCredit + //
+                ", engineeringRequiredCredit=" + engineeringRequiredCredit + //
+                ", engineeringCompletedCredit=" + engineeringCompletedCredit + //
                 ", generalRequiredCredit=" + generalRequiredCredit + //
                 ", generalCompletedCredit=" + generalCompletedCredit + //
                 ", minimumTotalGradePointAverage=" + minimumTotalGradePointAverage + //

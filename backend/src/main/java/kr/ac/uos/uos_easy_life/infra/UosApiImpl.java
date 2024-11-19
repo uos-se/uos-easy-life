@@ -83,6 +83,7 @@ public class UosApiImpl implements UosApi {
         int totalCompletedCredit = 120;
         int majorCompletedCredit = 60;
         int liberalCompletedCredit = 30;
+        int engineeringCompletedCredit = 6;
         int generalCompletedCredit = 30;
         double totalGradePointAverage = 3.5;
 

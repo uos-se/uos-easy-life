@@ -96,6 +96,8 @@ public class UserService {
     int majorCompletedCredit = 60;
     int liberalRequiredCredit = 30;
     int liberalCompletedCredit = 20;
+    int engineeringRequiredCredit = 8;
+    int engineeringCompletedCredit = 6;
     int generalRequiredCredit = 30;
     int generalCompletedCredit = 20;
     double minimumTotalGradePointAverage = 2.0;
