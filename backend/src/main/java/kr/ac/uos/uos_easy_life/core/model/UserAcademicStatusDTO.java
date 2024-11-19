@@ -9,10 +9,18 @@ public class UserAcademicStatusDTO {
     private int majorRequiredCredit;
     // 전공이수학점
     private int majorCompletedCredit;
+    // 전공필수요구학점
+    private int majorEssentialRequiredCredit;
+    // 전공필수이수학점
+    private int majorEssentialCompletedCredit;
     // 교양요구학점
     private int liberalRequiredCredit;
     // 교양이수학점
     private int liberalCompletedCredit;
+    // 교양필수요구학점
+    private int liberalEssentialRequiredCredit;
+    // 교양필수이수학점
+    private int liberalEssentialCompletedCredit;
     // 공학소양요구학점
     private int engineeringRequiredCredit;
     // 공학소양이수학점
@@ -31,8 +39,12 @@ public class UserAcademicStatusDTO {
             int totalCompletedCredit,
             int majorRequiredCredit,
             int majorCompletedCredit,
+            int majorEssentialRequiredCredit,
+            int majorEssentialCompletedCredit,
             int liberalRequiredCredit,
             int liberalCompletedCredit,
+            int liberalEssentialRequiredCredit,
+            int liberalEssentialCompletedCredit,
             int engineeringRequiredCredit,
             int engineeringCompletedCredit,
             int generalRequiredCredit,
@@ -43,8 +55,12 @@ public class UserAcademicStatusDTO {
         this.totalCompletedCredit = totalCompletedCredit;
         this.majorRequiredCredit = majorRequiredCredit;
         this.majorCompletedCredit = majorCompletedCredit;
+        this.majorEssentialRequiredCredit = majorEssentialRequiredCredit;
+        this.majorEssentialCompletedCredit = majorEssentialCompletedCredit;
         this.liberalRequiredCredit = liberalRequiredCredit;
         this.liberalCompletedCredit = liberalCompletedCredit;
+        this.liberalEssentialRequiredCredit = liberalEssentialRequiredCredit;
+        this.liberalEssentialCompletedCredit = liberalEssentialCompletedCredit;
         this.engineeringRequiredCredit = engineeringRequiredCredit;
         this.engineeringCompletedCredit = engineeringCompletedCredit;
         this.generalRequiredCredit = generalRequiredCredit;
@@ -69,12 +85,28 @@ public class UserAcademicStatusDTO {
         return majorCompletedCredit;
     }
 
+    public int getMajorEssentialRequiredCredit() {
+        return majorEssentialRequiredCredit;
+    }
+
+    public int getMajorEssentialCompletedCredit() {
+        return majorEssentialCompletedCredit;
+    }
+
     public int getLiberalRequiredCredit() {
         return liberalRequiredCredit;
     }
 
     public int getLiberalCompletedCredit() {
         return liberalCompletedCredit;
+    }
+
+    public int getLiberalEssentialRequiredCredit() {
+        return liberalEssentialRequiredCredit;
+    }
+
+    public int getLiberalEssentialCompletedCredit() {
+        return liberalEssentialCompletedCredit;
     }
 
     public int getEngineeringRequiredCredit(){
@@ -107,8 +139,12 @@ public class UserAcademicStatusDTO {
                 ", totalCompletedCredit=" + totalCompletedCredit + //
                 ", majorRequiredCredit=" + majorRequiredCredit + //
                 ", majorCompletedCredit=" + majorCompletedCredit + //
+                ", majorEssentialRequiredCredit=" + majorEssentialRequiredCredit + //
+                ", majorEssentialCompletedCredit=" + majorEssentialCompletedCredit + //
                 ", liberalRequiredCredit=" + liberalRequiredCredit + //
                 ", liberalCompletedCredit=" + liberalCompletedCredit + //
+                ", liberalEssential=" + liberalEssentialRequiredCredit + //
+                ", liberalEssentialCompletedCredit=" + liberalEssentialCompletedCredit + //
                 ", engineeringRequiredCredit=" + engineeringRequiredCredit + //
                 ", engineeringCompletedCredit=" + engineeringCompletedCredit + //
                 ", generalRequiredCredit=" + generalRequiredCredit + //

@@ -92,28 +92,50 @@ public class UserService {
 
     int totalRequiredCredit = 130;
     int totalCompletedCredit = 100;
+    
     int majorRequiredCredit = 70;
     int majorCompletedCredit = 60;
+    
+    int majorEssentialRequiredCredit = 24;
+    int majorEssentialCompletedCredit = 20;
+    
     int liberalRequiredCredit = 30;
     int liberalCompletedCredit = 20;
+    
+    int liberalEssentialRequiredCredit = 14;
+    int liberalEssentialCompletedCredit = 10;
+    
     int engineeringRequiredCredit = 8;
     int engineeringCompletedCredit = 6;
+    
     int generalRequiredCredit = 30;
     int generalCompletedCredit = 20;
+    
     double minimumTotalGradePointAverage = 2.0;
     double totalGradePointAverage = 3.5;
 
     return new UserAcademicStatusDTO(
         totalRequiredCredit,
         totalCompletedCredit,
+
         majorRequiredCredit,
         majorCompletedCredit,
+        
+        majorEssentialRequiredCredit,
+        majorEssentialCompletedCredit,
+        
         liberalRequiredCredit,
         liberalCompletedCredit,
+        
+        liberalEssentialRequiredCredit,
+        liberalEssentialCompletedCredit,
+        
         engineeringRequiredCredit,
         engineeringCompletedCredit,
+        
         generalRequiredCredit,
         generalCompletedCredit,
+        
         minimumTotalGradePointAverage,
         totalGradePointAverage);
   }

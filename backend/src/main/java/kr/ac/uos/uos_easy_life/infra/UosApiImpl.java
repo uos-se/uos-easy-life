@@ -82,13 +82,15 @@ public class UosApiImpl implements UosApi {
         // Mock data
         int totalCompletedCredit = 120;
         int majorCompletedCredit = 60;
+        int majorEssentialCompletedCredit = 24;
         int liberalCompletedCredit = 30;
+        int liberalEssentialCompletedCredit = 14;
         int engineeringCompletedCredit = 6;
         int generalCompletedCredit = 30;
         double totalGradePointAverage = 3.5;
 
-        return new UserAcademicStatus(totalCompletedCredit, majorCompletedCredit, liberalCompletedCredit,
-                generalCompletedCredit, totalGradePointAverage);
+        return new UserAcademicStatus(totalCompletedCredit, majorCompletedCredit, majorEssentialCompletedCredit, liberalCompletedCredit, 
+        liberalEssentialCompletedCredit, engineeringCompletedCredit, generalCompletedCredit, totalGradePointAverage);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class UosApiImpl implements UosApi {
 
     @Override
     public boolean isVolunteerCompleted(UosSession session, String studentId) {
-        // TODO: Implement this method
+        // TODO: Implement this method  
         // Mock data
         return true;
     }
