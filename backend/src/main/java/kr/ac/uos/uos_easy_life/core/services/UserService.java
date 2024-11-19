@@ -110,6 +110,8 @@ public class UserService {
         majorCompletedCredit,
         liberalRequiredCredit,
         liberalCompletedCredit,
+        engineeringRequiredCredit,
+        engineeringCompletedCredit,
         generalRequiredCredit,
         generalCompletedCredit,
         minimumTotalGradePointAverage,
