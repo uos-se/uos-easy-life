@@ -44,6 +44,7 @@ export const useCourseStore = create<CourseStore>((set) => ({
       lectureCredit: 3,
       lectureEngineeringCredit: 3.5,
       isMajor: true,
+      isMajorEssential: false,
     },
     {
       id: "5",
@@ -51,6 +52,7 @@ export const useCourseStore = create<CourseStore>((set) => ({
       lectureCode: "CS4002",
       lectureCredit: 3,
       lectureEngineeringCredit: 4.0,
+      isMajor: false,
       isMajorEssential: false,
     },
   ],
