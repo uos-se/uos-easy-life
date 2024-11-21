@@ -188,15 +188,146 @@ public class UosApiImpl implements UosApi {
 
   @Override
   public boolean isLanguageCertificationCompleted(UosSession session, String studentId) {
-    // TODO: Implement this method
-    // Mock data
-    return true;
+
+    /**
+     * 1. Get data for payload
+     * - strSemstrCd
+     * - strAcyr
+     */
+    String path = "/SCH/SugtPlanCmpSubject/onLoad.do";
+    String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5&_AUTH_PGM_ID=SugtPlanCmpSubject&__PRVC_PSBLTY_YN=N&_AUTH_TASK_AUTHRT_ID=CCMN_SVC&default.locale=CCMN101.KOR";
+
+    String strSemstrCd;
+    String strAcyr;
+
+    try {
+      String response = wiseRequest(path, body, session);
+      JSONObject obj = new JSONObject(response);
+      obj = obj.getJSONObject("dmResOnload");
+
+      strSemstrCd = obj.get("strSemstrCd").toString();
+      strAcyr = obj.get("strAcyr").toString();
+    } catch (IOException | InterruptedException | JSONException e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+
+    /**
+     * 2. Get actual info
+     */
+    path = "/SCH/SugtPlanCmpSubject/listStdntInfo.do";
+    body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
+        + "&_AUTH_PGM_ID=SugtPlanCmpSubject"
+        + "&__PRVC_PSBLTY_YN=N"
+        + "&_AUTH_TASK_AUTHRT_ID=CCMN_SVC"
+        + "&default.locale=CCMN101.KOR"
+        + "&%40d1%23strAcyr=" + strAcyr
+        + "&%40d1%23strSemstrCd=" + strSemstrCd
+        + "&%40d1%23strStdntNo=" + studentId
+        // + "&%40d1%23strStdntNm=%EA%B9%80%EC%9B%90%EB%B9%88" // student name 필요한가?
+        // Nope
+        + "&%40d1%23strLocale=CCMN101.KOR"
+        + "&%40d1%23strPopDiv="
+        + "&%40d%23=%40d1%23"
+        + "&%40d1%23=dmReqKey"
+        + "&%40d1%23tp=dm";
+
+    boolean result = false;
+
+    try {
+      String response = wiseRequest(path, body, session);
+      JSONObject obj = new JSONObject(response);
+      JSONArray array = obj.getJSONArray("dsGrdtnCertInfo");
+
+      for (int i = 0; i < array.length(); i++) {
+        JSONObject element = array.getJSONObject(i);
+        String div = element.get("CERT_DIV_CN").toString();
+
+        if (div.equals("졸업인증(외국어)")) {
+          String isPassed = element.get("PASS_YN").toString();
+
+          if (isPassed.equals("Y"))
+            result = true;
+          break;
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return result;
+    }
+
+    return result;
   }
 
   @Override
   public boolean isVolunteerCompleted(UosSession session, String studentId) {
-    // TODO: Implement this method
-    // Mock data
-    return true;
+
+    /**
+     * 1. Get data for payload
+     * - strSemstrCd
+     * - strAcyr
+     */
+    String path = "/SCH/SugtPlanCmpSubject/onLoad.do";
+    String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5&_AUTH_PGM_ID=SugtPlanCmpSubject&__PRVC_PSBLTY_YN=N&_AUTH_TASK_AUTHRT_ID=CCMN_SVC&default.locale=CCMN101.KOR";
+
+    String strSemstrCd;
+    String strAcyr;
+
+    try {
+      String response = wiseRequest(path, body, session);
+      JSONObject obj = new JSONObject(response);
+      obj = obj.getJSONObject("dmResOnload");
+
+      strSemstrCd = obj.get("strSemstrCd").toString();
+      strAcyr = obj.get("strAcyr").toString();
+    } catch (IOException | InterruptedException | JSONException e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+
+    /**
+     * 2. Get actual info
+     */
+    path = "/SCH/SugtPlanCmpSubject/listStdntInfo.do";
+    body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
+        + "&_AUTH_PGM_ID=SugtPlanCmpSubject"
+        + "&__PRVC_PSBLTY_YN=N"
+        + "&_AUTH_TASK_AUTHRT_ID=CCMN_SVC"
+        + "&default.locale=CCMN101.KOR"
+        + "&%40d1%23strAcyr=" + strAcyr
+        + "&%40d1%23strSemstrCd=" + strSemstrCd
+        + "&%40d1%23strStdntNo=" + studentId
+        // + "&%40d1%23strStdntNm=%EA%B9%80%EC%9B%90%EB%B9%88" // student name 필요한가?
+        + "&%40d1%23strLocale=CCMN101.KOR"
+        + "&%40d1%23strPopDiv="
+        + "&%40d%23=%40d1%23"
+        + "&%40d1%23=dmReqKey"
+        + "&%40d1%23tp=dm";
+
+    boolean result = false;
+
+    try {
+      String response = wiseRequest(path, body, session);
+      JSONObject obj = new JSONObject(response);
+      JSONArray array = obj.getJSONArray("dsGrdtnCertInfo");
+
+      for (int i = 0; i < array.length(); i++) {
+        JSONObject element = array.getJSONObject(i);
+        String div = element.get("CERT_DIV_CN").toString();
+
+        if (div.equals("사회봉사영역")) {
+          String isPassed = element.get("PASS_YN").toString();
+
+          if (isPassed.equals("Y"))
+            result = true;
+          break;
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return result;
+    }
+
+    return result;
   }
 }
