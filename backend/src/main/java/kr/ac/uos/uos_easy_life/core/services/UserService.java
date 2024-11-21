@@ -13,6 +13,7 @@ import kr.ac.uos.uos_easy_life.core.interfaces.UserRepository;
 import kr.ac.uos.uos_easy_life.core.model.Course;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.User;
+import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatusDTO;
 import kr.ac.uos.uos_easy_life.core.model.UserFullInfo;
 
 @Service
@@ -83,5 +84,59 @@ public class UserService {
       }
       registrationRepository.register(userId, course.getId());
     }
+  }
+
+  public UserAcademicStatusDTO getUserAcademicStatus(String userId) {
+    // TODO: Implement this method
+    // Mock data
+
+    int totalRequiredCredit = 130;
+    int totalCompletedCredit = 100;
+    
+    int majorRequiredCredit = 70;
+    int majorCompletedCredit = 60;
+    
+    int majorEssentialRequiredCredit = 24;
+    int majorEssentialCompletedCredit = 20;
+    
+    int liberalRequiredCredit = 30;
+    int liberalCompletedCredit = 20;
+    
+    int liberalEssentialRequiredCredit = 14;
+    int liberalEssentialCompletedCredit = 10;
+    
+    int engineeringRequiredCredit = 8;
+    int engineeringCompletedCredit = 6;
+    
+    int generalRequiredCredit = 30;
+    int generalCompletedCredit = 20;
+    
+    double minimumTotalGradePointAverage = 2.0;
+    double totalGradePointAverage = 3.5;
+
+    return new UserAcademicStatusDTO(
+        totalRequiredCredit,
+        totalCompletedCredit,
+
+        majorRequiredCredit,
+        majorCompletedCredit,
+        
+        majorEssentialRequiredCredit,
+        majorEssentialCompletedCredit,
+        
+        liberalRequiredCredit,
+        liberalCompletedCredit,
+        
+        liberalEssentialRequiredCredit,
+        liberalEssentialCompletedCredit,
+        
+        engineeringRequiredCredit,
+        engineeringCompletedCredit,
+        
+        generalRequiredCredit,
+        generalCompletedCredit,
+        
+        minimumTotalGradePointAverage,
+        totalGradePointAverage);
   }
 }
