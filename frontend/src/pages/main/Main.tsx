@@ -1,21 +1,10 @@
-import { useEffect, useState } from "react";
-import { useSessionContext } from "../../context/useSessionContext";
+import { Header } from "@/components/layout/Header";
+import { useSessionContext } from "@/context/useSessionContext";
+import { UserInfo } from "@/types/UserInfo";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-interface Course {
-  id: string;
-  lectureName: string;
-  lectureCode: string;
-  lectureCredit: number;
-  lectureGrade: number;
-}
-
-interface UserInfo {
-  name: string;
-  studentId: string;
-  major: string;
-  courses: Course[];
-}
+import { AcademicProgress } from "./components/AcademicProgress";
+import { CourseList } from "./components/CourseList";
 
 const fetchUserInfo = async (session: string): Promise<UserInfo> => {
   const res = await fetch(`/api/user/full?session=${session}`);
@@ -24,11 +13,21 @@ const fetchUserInfo = async (session: string): Promise<UserInfo> => {
 };
 
 export function Main() {
-  const { session, logout } = useSessionContext();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const { session } = useSessionContext();
+
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    name: "홍길동",
+    studentId: "2019123456",
+    major: "컴퓨터공학과",
+  });
+
+  const [isSync, setIsSync] = useState<boolean>(false);
   const nav = useNavigate();
 
   const onSync = async () => {
+    setIsSync(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsSync(false);
     if (!session) return;
     const { key, id, password } = session;
     await fetch(
@@ -36,49 +35,64 @@ export function Main() {
     );
     const userInfo = await fetchUserInfo(key);
     setUserInfo(userInfo);
+    // setCourses(courses);
   };
 
-  useEffect(() => {
-    // Check if the session is valid. If not, redirect to the login page.
-    if (!session) {
-      nav("/login");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!session) {
+  //     nav("/login");
+  //     return;
+  //   }
 
-    // Fetch user info and set it to the state.
-    (async () => {
-      const userInfo = await fetchUserInfo(session.key);
-      setUserInfo(userInfo);
-    })();
-  }, [session, nav]);
+  //   (async () => {
+  //     const userInfo = await fetchUserInfo(session.key);
+  //     setUserInfo(userInfo);
+  //   })();
+  // }, [session, nav]);
 
   return (
-    <div>
-      Main
-      <div>
-        <button onClick={onSync}>Sync</button>
-        <button onClick={() => logout()}>Logout</button>
-        {userInfo ? (
-          <div>
-            <div>Name: {userInfo.name}</div>
-            <div>Student ID: {userInfo.studentId}</div>
-            <div>Major: {userInfo.major}</div>
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-indigo-50">
+      <Header />
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <section className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div className="flex justify-between items-center">
             <div>
-              Courses:
-              <ul>
-                {userInfo.courses.map((course) => (
-                  <li key={course.id}>
-                    {course.lectureName} ({course.lectureCode}) -{" "}
-                    {course.lectureCredit} credits, grade: {course.lectureGrade}
-                  </li>
-                ))}
-              </ul>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {userInfo?.name || "Loading..."}
+              </h1>
+              <p className="text-gray-600">
+                {userInfo?.studentId || "Student ID"} |{" "}
+                {userInfo?.major || "Major"}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-500 cursor-text">
+                Last Updated: 2024-10-25 13:12:47
+              </span>
+              <button
+                onClick={onSync}
+                className="flex items-center space-x-2 bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-colors duration-200"
+                disabled={isSync}
+              >
+                <span>{isSync ? "Syncing..." : "Sync"}</span>
+                <svg
+                  className={`w-5 h-5 ${isSync ? "animate-spin" : ""}`}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm0 16v2a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
-        ) : (
-          <div>User info is not loaded</div>
-        )}
-      </div>
+        </section>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <AcademicProgress />
+          <CourseList />
+        </div>
+      </main>
     </div>
   );
 }
