@@ -1,0 +1,5 @@
+{
+  "modelPackage": "models",
+  "apiPackage": "apis",
+  "withSeparateModelsAndApi": true
+}
