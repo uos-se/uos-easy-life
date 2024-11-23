@@ -1,86 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
-import { Session, SessionContext } from "./SessionContext";
+import { useSessionStore } from "@/store/sessionStore";
+import { ReactNode, useEffect } from "react";
 
-const LOCAL_STORAGE_KEY = "uos-easy-life-session";
-
-const validateSessionKey = async (session: string) => {
-  const res = await fetch(`/api/user?session=${session}`);
-  const text = await res.text();
-  return res.status === 200 && !!text;
-};
-
-const createSession = async (id: string, password: string) => {
-  const res = await fetch(
-    `/api/login?portalId=${id}&portalPassword=${password}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  const token = await res.text();
-  if (res.status !== 200) return null;
-  if (!token) return null;
-  return token;
-};
-
-export function SessionContextProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [session, setSession] = useState<Session | null>(null);
-
-  const logout = useCallback(() => {
-    setSession(null);
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-  }, []);
-
-  const login = useCallback(
-    async (id: string, password: string) => {
-      const sessionKey = await createSession(id, password);
-      if (!sessionKey) logout();
-      else setSession({ key: sessionKey, id, password });
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({ key: sessionKey, id, password })
-      );
-    },
-    [logout]
-  );
+export function SessionProvider({ children }: { children: ReactNode }) {
+  const { login, validateSessionKey } = useSessionStore();
 
   useEffect(() => {
-    // Check if session is stored in the local storage.
-    const sessionString = localStorage.getItem(LOCAL_STORAGE_KEY);
-
-    // If session is not stored in the local storage, do nothing.
+    const sessionString = localStorage.getItem("uos-easy-life-session");
     if (!sessionString) return;
 
     (async () => {
-      // If session is not stored in the local storage, do nothing.
-      const session = JSON.parse(sessionString) as Session;
-      if (!session) return;
-
-      // If the session key is valid, set the session.
-      if (await validateSessionKey(session.key)) {
-        setSession(session);
-        return;
+      const storedSession = JSON.parse(sessionString);
+      if (await validateSessionKey(storedSession.key)) {
+        useSessionStore.setState({ session: storedSession });
+      } else {
+        await login(storedSession.id, storedSession.password);
       }
-
-      // If the session exists but the key is invalid, try to create a new session.
-      await login(session.id, session.password);
     })();
-  }, [login]);
+  }, [login, validateSessionKey]);
 
-  return (
-    <SessionContext.Provider
-      value={{
-        session: session,
-        login,
-        logout,
-      }}>
-      {children}
-    </SessionContext.Provider>
-  );
+  return <>{children}</>;
 }

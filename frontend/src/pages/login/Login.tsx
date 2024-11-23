@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSessionContext } from "../../context/useSessionContext";
 import { UserAuthForm } from "./components/UserAuthForm";
+import { useSessionStore } from "@/store/sessionStore";
 
 export function Login() {
-  const { session } = useSessionContext();
+  const { session } = useSessionStore();
   const nav = useNavigate();
 
   // Check if the session is valid. If valid, redirect to the main page.
@@ -23,9 +23,8 @@ export function Login() {
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
               <p className="text-lg">
-                &ldquo;
-                졸업은 끝이 아니라 새로운 시작이다... 하지만 그 전에 먼저 졸업을 해야 한다.
-                &rdquo;
+                &ldquo; 졸업은 끝이 아니라 새로운 시작이다... 하지만 그 전에
+                먼저 졸업을 해야 한다. &rdquo;
               </p>
               <footer className="text-sm">Graduos</footer>
             </blockquote>
@@ -34,9 +33,7 @@ export function Login() {
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                로그인
-              </h1>
+              <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
               <p className="text-sm text-muted-foreground">
                 서울시립대 포털 아이디 비밀번호를 적어주세요
               </p>

@@ -1,8 +1,8 @@
-import { useSessionContext } from "@/context/useSessionContext";
+import { useSessionStore } from "@/store/sessionStore";
 import { useNavigate } from "react-router-dom";
 
 export function Header() {
-  const { logout } = useSessionContext();
+  const { logout } = useSessionStore();
   const nav = useNavigate();
 
   return (

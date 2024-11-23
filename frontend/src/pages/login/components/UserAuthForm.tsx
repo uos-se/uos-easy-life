@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { Icons } from "@/components/icons"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useSessionContext } from "@/context/useSessionContext"
-import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useSessionStore } from "@/store/sessionStore";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login } = useSessionContext()
+  const { login } = useSessionStore();
 
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
-    login(id, password)
-    setIsLoading(false)
+    event.preventDefault();
+    setIsLoading(true);
+    login(id, password);
+    setIsLoading(false);
   }
 
   return (
@@ -44,7 +44,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               onChange={(e) => setId(e.target.value)}
             />
             <Label className="text-muted-foreground" htmlFor="pw">
-             포털 비밀번호
+              포털 비밀번호
             </Label>
             <Input
               id="pw"
@@ -65,6 +65,5 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         </div>
       </form>
     </div>
-  )
+  );
 }
-
