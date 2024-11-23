@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Login } from "./pages/login/Login";
 import { Main } from "./pages/main/Main";
-import { SessionProvider } from "./context/SessionContextProvider";
+import { SessionProvider } from "./context/SessionProvider";
 
 const router = createBrowserRouter([
   {
