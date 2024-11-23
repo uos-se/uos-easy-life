@@ -5,8 +5,6 @@ export function Header() {
   const { session, logout } = useSessionStore();
   const nav = useNavigate();
 
-  console.log(session);
-
   return (
     <header className="bg-white p-6 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
