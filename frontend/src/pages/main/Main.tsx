@@ -1,15 +1,20 @@
 import { Header } from "@/components/layout/Header";
 import { UserInfo } from "@/types/UserInfo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
 import { useSessionStore } from "@/store/sessionStore";
+import { ControllerApi } from "@/apis/ControllerApi";
 
 const fetchUserInfo = async (session: string): Promise<UserInfo> => {
-  const res = await fetch(`/api/user/full?session=${session}`);
-  const userInfo = await res.json();
-  return userInfo as UserInfo;
+  const api = new ControllerApi();
+  const userInfo = await api.getUserFullInfo({ session });
+  return {
+    name: userInfo.name || "홍길동",
+    studentId: userInfo.studentId || "2019123456",
+    major: userInfo.major || "컴퓨터공학과",
+  };
 };
 
 export function Main() {
@@ -25,30 +30,40 @@ export function Main() {
   const nav = useNavigate();
 
   const onSync = async () => {
-    setIsSync(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSync(false);
     if (!session) return;
-    const { key, id, password } = session;
-    await fetch(
-      `/api/user/sync?session=${key}&portalId=${id}&portalPassword=${password}`
-    );
-    const userInfo = await fetchUserInfo(key);
-    setUserInfo(userInfo);
+    try {
+      setIsSync(true);
+      const { key, id, password } = session;
+
+      const api = new ControllerApi();
+      await api.syncUser({
+        session: key,
+        portalId: id,
+        portalPassword: password,
+      });
+
+      const userInfo = await fetchUserInfo(key);
+      setUserInfo(userInfo);
+    } catch (err) {
+      console.error("Error during user sync:", err); // 에러 로깅
+      alert("User sync failed. Please try again."); // 사용자 피드백
+    } finally {
+      setIsSync(false);
+    }
     // setCourses(courses);
   };
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     nav("/login");
-  //     return;
-  //   }
+  useEffect(() => {
+    // if (!session) {
+    //   nav("/login");
+    //   return;
+    // }
 
-  //   (async () => {
-  //     const userInfo = await fetchUserInfo(session.key);
-  //     setUserInfo(userInfo);
-  //   })();
-  // }, [session, nav]);
+    (async () => {
+      const userInfo = await fetchUserInfo(session.key);
+      setUserInfo(userInfo);
+    })();
+  }, [session, nav]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-indigo-50">
