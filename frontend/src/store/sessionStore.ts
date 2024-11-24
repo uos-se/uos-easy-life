@@ -1,9 +1,4 @@
-import {
-  ControllerApi,
-  LoginRequest,
-  LogoutRequest,
-} from "@/apis/ControllerApi";
-import { Configuration } from "@/runtime";
+import { ControllerService } from "@/services/ControllerService";
 import { create } from "zustand";
 
 export interface Session {
@@ -21,20 +16,12 @@ export interface SessionStore {
 
 const LOCAL_STORAGE_KEY = "uos-easy-life-session";
 
-const apiConfig = new Configuration({ basePath: "http://localhost:8080" });
-const controllerApi = new ControllerApi(apiConfig);
-
 export const useSessionStore = create<SessionStore>((set) => ({
   session: null,
 
   login: async (id, password) => {
     try {
-      // OpenAPI Generator의 login 메서드 호출
-      const loginRequest: LoginRequest = {
-        portalId: id,
-        portalPassword: password,
-      };
-      const sessionKey = await controllerApi.login(loginRequest);
+      const sessionKey = await ControllerService.login(id, password);
 
       // 세션 키가 없거나 응답이 비정상적인 경우
       if (!sessionKey) {
@@ -64,8 +51,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
       if (!currentSession) return;
 
       // OpenAPI Generator의 logout 메서드 호출
-      const logoutRequest: LogoutRequest = { session: currentSession.key };
-      await controllerApi.logout(logoutRequest);
+      await ControllerService.logout(currentSession.key);
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
@@ -77,7 +63,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
 
   validateSessionKey: async (session) => {
     try {
-      const isValid = await controllerApi.check({ session: session.key });
+      const isValid = await ControllerService.check(session.key);
       return isValid;
     } catch (error) {
       console.error("Session validation failed:", error);
