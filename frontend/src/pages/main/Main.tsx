@@ -6,24 +6,29 @@ import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
 import { useSessionStore } from "@/store/sessionStore";
 import { ControllerService } from "@/services/ControllerService";
+import { UserFullInfo } from "@/models/UserFullInfo";
+
+const demoUser: UserInfo = {
+  name: "홍길동",
+  studentId: "2019123456",
+  major: "컴퓨터공학과",
+};
 
 const fetchUserInfo = async (session: string): Promise<UserInfo> => {
-  const userInfo = await ControllerService.getUserFullInfo(session);
+  const userInfo: UserFullInfo = await ControllerService.getUserFullInfo(
+    session
+  );
   return {
-    name: userInfo.name || "홍길동",
-    studentId: userInfo.studentId || "2019123456",
-    major: userInfo.major || "컴퓨터공학과",
+    name: userInfo.name || demoUser.name,
+    studentId: userInfo.studentId || demoUser.studentId,
+    major: userInfo.major || demoUser.major,
   };
 };
 
 export function Main() {
   const { session } = useSessionStore();
 
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    name: "홍길동",
-    studentId: "2019123456",
-    major: "컴퓨터공학과",
-  });
+  const [userInfo, setUserInfo] = useState<UserInfo>(demoUser);
 
   const [isSync, setIsSync] = useState<boolean>(false);
   const nav = useNavigate();
