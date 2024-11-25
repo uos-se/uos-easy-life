@@ -14,7 +14,7 @@ public interface UosApi {
   public List<String> getUserCourseCodes(UosSession session, String studentId);
 
   // 현재 유저의 학적 정보를 반환
-  public UserAcademicStatus getUserAcademicStatus(UosSession session, String studentId);
+  public UserAcademicStatus getUserAcademicStatus(UosSession session, String name, String studentId);
 
   // 유저가 어학성적을 취득했는지 여부를 반환
   public boolean isLanguageCertificationCompleted(UosSession session, String studentId);
