@@ -187,63 +187,55 @@ public class UosApiImpl implements UosApi {
   }
 
   @Override
-  public boolean isLanguageCertificationCompleted(UosSession session, String studentId) {
-
-    return checkCertificationCompleted(session, studentId, "졸업인증(외국어)");
+  public boolean isLanguageCertificationCompleted(UosSession session, String name, String studentId) {
+    try {
+      String response = getCertificationResponse(session, name, studentId);
+      return parseCertificationCompleted(response, "졸업인증(외국어)");
+    } catch (NullPointerException e) {
+      return false;
+    }
   }
 
   @Override
-  public boolean isVolunteerCompleted(UosSession session, String studentId) {
-
-    return checkCertificationCompleted(session, studentId, "사회봉사영역");
-  }
-
-  private boolean checkCertificationCompleted(UosSession session, String studentId, String certificationName) {
-
-    // 1. Get semester data
-    String strSemstrCd;
-    String strAcyr;
-
+  public boolean isVolunteerCompleted(UosSession session, String name, String studentId) {
     try {
-      JSONObject onloadResponse = new JSONObject(
-          wiseRequest(
-              "/SCH/SugtPlanCmpSubject/onLoad.do",
-              "_AUTH_MENU_KEY=SugtPlanCmpSubject_5&_AUTH_PGM_ID=SugtPlanCmpSubject&__PRVC_PSBLTY_YN=N&_AUTH_TASK_AUTHRT_ID=CCMN_SVC&default.locale=CCMN101.KOR",
-              session));
-      JSONObject dmResOnload = onloadResponse.getJSONObject("dmResOnload");
-      strSemstrCd = dmResOnload.get("strSemstrCd").toString();
-      strAcyr = dmResOnload.get("strAcyr").toString();
-
-    } catch (IOException | InterruptedException | JSONException e) {
-      // e.printStackTrace(System.out);
+      String response = getCertificationResponse(session, name, studentId);
+      return parseCertificationCompleted(response, "사회봉사영역");
+    } catch (NullPointerException e) {
       return false;
     }
+  }
 
-    // 2. Get certification data and check it
+  private String getCertificationResponse(UosSession session, String name, String studentId)
+      throws NullPointerException {
+    LocalDate currentDate = LocalDate.now();
+    String path = "/SCH/SugtPlanCmpSubject/listStdntInfo.do";
+    String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
+        + "&_AUTH_PGM_ID=SugtPlanCmpSubject"
+        + "&__PRVC_PSBLTY_YN=N"
+        + "&_AUTH_TASK_AUTHRT_ID=CCMN_SVC"
+        + "&default.locale=CCMN101.KOR"
+        + "&%40d1%23strAcyr=" + currentDate.getYear()
+        + "&%40d1%23strSemstrCd=" + getNextSemesterCode(currentDate.getMonthValue())
+        + "&%40d1%23strStdntNo=" + studentId
+        + "&%40d1%23strStdntNm=" + URLEncoder.encode(name, StandardCharsets.UTF_8)
+        + "&%40d1%23strLocale=CCMN101.KOR"
+        + "&%40d1%23strPopDiv="
+        + "&%40d%23=%40d1%23"
+        + "&%40d1%23=dmReqKey"
+        + "&%40d1%23tp=dm";
+
     try {
-      String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
-          + "&_AUTH_PGM_ID=SugtPlanCmpSubject"
-          + "&__PRVC_PSBLTY_YN=N"
-          + "&_AUTH_TASK_AUTHRT_ID=CCMN_SVC"
-          + "&default.locale=CCMN101.KOR"
-          + "&%40d1%23strAcyr=" + strAcyr
-          + "&%40d1%23strSemstrCd=" + strSemstrCd
-          + "&%40d1%23strStdntNo=" + studentId
-          // + "&%40d1%23strStdntNm=%EA%B9%80%EC%9B%90%EB%B9%88" // tested: student name
-          // is not needed
-          + "&%40d1%23strLocale=CCMN101.KOR"
-          + "&%40d1%23strPopDiv="
-          + "&%40d%23=%40d1%23"
-          + "&%40d1%23=dmReqKey"
-          + "&%40d1%23tp=dm";
+      String response = wiseRequest(path, body, session);
+      return response;
+    } catch (IOException | InterruptedException e) {
+      return null;
+    }
+  }
 
-      JSONObject response = new JSONObject(
-          wiseRequest(
-              "/SCH/SugtPlanCmpSubject/listStdntInfo.do",
-              body,
-              session));
-
-      JSONArray certInfoArray = response.getJSONArray("dsGrdtnCertInfo");
+  public boolean parseCertificationCompleted(String response, String certificationName) {
+    try {
+      JSONArray certInfoArray = (new JSONObject(response)).getJSONArray("dsGrdtnCertInfo");
 
       for (int i = 0; i < certInfoArray.length(); i++) {
         JSONObject element = certInfoArray.getJSONObject(i);
@@ -251,12 +243,9 @@ public class UosApiImpl implements UosApi {
           return element.getString("PASS_YN").equals("Y");
         }
       }
+    } catch (JSONException je) {
 
-      return false;
-    } catch (Exception e) {
-      // e.printStackTrace(System.out);
-      return false;
     }
-
+    return false;
   }
 }

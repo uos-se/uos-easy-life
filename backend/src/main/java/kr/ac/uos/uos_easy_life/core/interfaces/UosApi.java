@@ -17,8 +17,8 @@ public interface UosApi {
   public UserAcademicStatus getUserAcademicStatus(UosSession session, String name, String studentId);
 
   // 유저가 어학성적을 취득했는지 여부를 반환
-  public boolean isLanguageCertificationCompleted(UosSession session, String studentId);
+  public boolean isLanguageCertificationCompleted(UosSession session, String name, String studentId);
 
   // 유저가 봉사활동을 완료했는지 여부를 반환
-  public boolean isVolunteerCompleted(UosSession session, String studentId);
+  public boolean isVolunteerCompleted(UosSession session, String name, String studentId);
 }

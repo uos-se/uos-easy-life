@@ -1,0 +1,40 @@
+{
+  "dsGrdtnCertInfo": [
+    {
+      "MJR_DIVCD": "SUSR003.01",
+      "SEMSTR_NM": null,
+      "SEMSTR_CD": null,
+      "PASS_YN": "N",
+      "ACYR": null,
+      "RMRK_CN": null,
+      "OTPT_ORDR": "SUSR003.01-1",
+      "STDNT_NO": "2019920016",
+      "MJR_DIVNM": "주전공",
+      "CERT_DIV_CN": "사회봉사영역",
+      "PASS_CN": "인증미완료"
+    },
+    {
+      "MJR_DIVCD": "SUSR003.01",
+      "SEMSTR_NM": "2학기",
+      "SEMSTR_CD": "CCMN031.20",
+      "PASS_YN": "Y",
+      "ACYR": "2024",
+      "RMRK_CN": "2024년2학기 인증",
+      "OTPT_ORDR": "SUSR003.01-2",
+      "STDNT_NO": "2019920016",
+      "MJR_DIVNM": "주전공",
+      "CERT_DIV_CN": "졸업인증(외국어)",
+      "PASS_CN": "인증완료"
+    }
+  ],
+  "dsStdntInfo": [
+    {
+      "UTE_YN": null,
+      "CHG_SEMSTR_NM": "2학기",
+      "TYPE_NM": "복학",
+      "COMPNO_MJR_NM": null,
+      "CHG_YR": "2022",
+      "SUB_MJR_NM": null
+    }
+  ]
+}

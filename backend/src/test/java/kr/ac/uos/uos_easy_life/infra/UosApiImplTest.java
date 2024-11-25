@@ -34,4 +34,17 @@ class UosApiImplTest {
     assertThat(result.getGeneralCompletedCredit()).isEqualTo(3);
     assertThat(result.getTotalGradePointAverage()).isEqualTo(3.5);
   }
+
+  @Test
+  void parseCertificationCompletedTest() throws IOException {
+
+    File file = new File("src/test/resources/infra/Certification.json");
+    String response = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+
+    boolean volunteerResult = uosApiImpl.parseCertificationCompleted(response, "사회봉사영역");
+    boolean languageResult = uosApiImpl.parseCertificationCompleted(response, "졸업인증(외국어)");
+
+    assertThat(volunteerResult).isFalse();
+    assertThat(languageResult).isTrue();
+  }
 }
