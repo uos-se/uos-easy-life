@@ -1,10 +1,10 @@
 import { Header } from "@/components/layout/Header";
-import { useSessionContext } from "@/context/useSessionContext";
 import { UserInfo } from "@/types/UserInfo";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
+import { useSessionStore } from "@/store/sessionStore";
 
 const fetchUserInfo = async (session: string): Promise<UserInfo> => {
   const res = await fetch(`/api/user/full?session=${session}`);
@@ -13,7 +13,7 @@ const fetchUserInfo = async (session: string): Promise<UserInfo> => {
 };
 
 export function Main() {
-  const { session } = useSessionContext();
+  const { session } = useSessionStore();
 
   const [userInfo, setUserInfo] = useState<UserInfo>({
     name: "홍길동",
