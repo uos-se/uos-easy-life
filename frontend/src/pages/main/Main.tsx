@@ -5,11 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
 import { useSessionStore } from "@/store/sessionStore";
-import { ControllerApi } from "@/apis/ControllerApi";
+import { ControllerService } from "@/services/ControllerService";
 
 const fetchUserInfo = async (session: string): Promise<UserInfo> => {
-  const api = new ControllerApi();
-  const userInfo = await api.getUserFullInfo({ session });
+  const userInfo = await ControllerService.getUserFullInfo(session);
   return {
     name: userInfo.name || "홍길동",
     studentId: userInfo.studentId || "2019123456",
@@ -35,12 +34,7 @@ export function Main() {
       setIsSync(true);
       const { key, id, password } = session;
 
-      const api = new ControllerApi();
-      await api.syncUser({
-        session: key,
-        portalId: id,
-        portalPassword: password,
-      });
+      await ControllerService.syncUser(key, id, password);
 
       const userInfo = await fetchUserInfo(key);
       setUserInfo(userInfo);
@@ -59,10 +53,13 @@ export function Main() {
     //   return;
     // }
 
-    (async () => {
-      const userInfo = await fetchUserInfo(session.key);
-      setUserInfo(userInfo);
-    })();
+    //todo: 위에 주석 풀면서 if(session)도 삭제
+    if (session) {
+      (async () => {
+        const userInfo = await fetchUserInfo(session.key);
+        setUserInfo(userInfo);
+      })();
+    }
   }, [session, nav]);
 
   return (
