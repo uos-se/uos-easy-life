@@ -1,7 +1,8 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { useCourseStore } from "@/store/courseStore";
 
 export function CourseList() {
-  const { filteredCourses } = useCourseStore();
+  const { recommendedCourses } = useCourseStore();
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg md:col-span-2">
@@ -9,8 +10,8 @@ export function CourseList() {
         다음학기에 들으면 좋을 과목
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
+        {recommendedCourses !== undefined ? (
+          recommendedCourses.map((course) => (
             <div
               key={course.id}
               className="bg-white p-4 rounded-md shadow-sm border border-gray-100 cursor-pointer"
@@ -25,9 +26,9 @@ export function CourseList() {
                 </span>
                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
                   <span className="mr-1 text-purple-500">공학소양학점:</span>{" "}
-                  {course.lectureEngineeringCredit}
+                  {course.lectureCredit}
                 </span>
-                {course.isMajor && (
+                {/* {course.isMajor && (
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                     <span className="mr-1 text-yellow-500">전공</span>
                   </span>
@@ -36,12 +37,25 @@ export function CourseList() {
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
                     <span className="mr-1 text-red-500">전공 필수 과목</span>
                   </span>
-                )}
+                )} */}
               </div>
             </div>
           ))
         ) : (
-          <p className="text-gray-500">필터링된 과목이 없습니다.</p>
+          <>
+            <Skeleton>
+              <div className="rounded-md w-auto h-[120px]"></div>
+            </Skeleton>
+            <Skeleton>
+              <div className="rounded-md w-auto h-[120px]"></div>
+            </Skeleton>
+            <Skeleton>
+              <div className="rounded-md w-auto h-[120px]"></div>
+            </Skeleton>
+            <Skeleton>
+              <div className="rounded-md w-auto h-[120px]"></div>
+            </Skeleton>
+          </>
         )}
       </div>
     </div>
