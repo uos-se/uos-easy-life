@@ -188,26 +188,25 @@ public class UosApiImpl implements UosApi {
 
   @Override
   public boolean isLanguageCertificationCompleted(UosSession session, String name, String studentId) {
-    try {
-      String response = getCertificationResponse(session, name, studentId);
-      return parseCertificationCompleted(response, "졸업인증(외국어)");
-    } catch (NullPointerException e) {
+    String response = getCertificationResponse(session, name, studentId);
+    if (response == null) {
       return false;
     }
+
+    return parseCertificationCompleted(response, "졸업인증(외국어)");
   }
 
   @Override
   public boolean isVolunteerCompleted(UosSession session, String name, String studentId) {
-    try {
-      String response = getCertificationResponse(session, name, studentId);
-      return parseCertificationCompleted(response, "사회봉사영역");
-    } catch (NullPointerException e) {
+    String response = getCertificationResponse(session, name, studentId);
+    if (response == null) {
       return false;
     }
+
+    return parseCertificationCompleted(response, "사회봉사영역");
   }
 
-  private String getCertificationResponse(UosSession session, String name, String studentId)
-      throws NullPointerException {
+  private String getCertificationResponse(UosSession session, String name, String studentId) {
     LocalDate currentDate = LocalDate.now();
     String path = "/SCH/SugtPlanCmpSubject/listStdntInfo.do";
     String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
