@@ -187,16 +187,64 @@ public class UosApiImpl implements UosApi {
   }
 
   @Override
-  public boolean isLanguageCertificationCompleted(UosSession session, String studentId) {
-    // TODO: Implement this method
-    // Mock data
-    return true;
+  public boolean isLanguageCertificationCompleted(UosSession session, String name, String studentId) {
+    String response = getCertificationResponse(session, name, studentId);
+    if (response == null) {
+      return false;
+    }
+
+    return parseCertificationCompleted(response, "졸업인증(외국어)");
   }
 
   @Override
-  public boolean isVolunteerCompleted(UosSession session, String studentId) {
-    // TODO: Implement this method
-    // Mock data
-    return true;
+  public boolean isVolunteerCompleted(UosSession session, String name, String studentId) {
+    String response = getCertificationResponse(session, name, studentId);
+    if (response == null) {
+      return false;
+    }
+
+    return parseCertificationCompleted(response, "사회봉사영역");
+  }
+
+  private String getCertificationResponse(UosSession session, String name, String studentId) {
+    LocalDate currentDate = LocalDate.now();
+    String path = "/SCH/SugtPlanCmpSubject/listStdntInfo.do";
+    String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
+        + "&_AUTH_PGM_ID=SugtPlanCmpSubject"
+        + "&__PRVC_PSBLTY_YN=N"
+        + "&_AUTH_TASK_AUTHRT_ID=CCMN_SVC"
+        + "&default.locale=CCMN101.KOR"
+        + "&%40d1%23strAcyr=" + currentDate.getYear()
+        + "&%40d1%23strSemstrCd=" + getNextSemesterCode(currentDate.getMonthValue())
+        + "&%40d1%23strStdntNo=" + studentId
+        + "&%40d1%23strStdntNm=" + URLEncoder.encode(name, StandardCharsets.UTF_8)
+        + "&%40d1%23strLocale=CCMN101.KOR"
+        + "&%40d1%23strPopDiv="
+        + "&%40d%23=%40d1%23"
+        + "&%40d1%23=dmReqKey"
+        + "&%40d1%23tp=dm";
+
+    try {
+      String response = wiseRequest(path, body, session);
+      return response;
+    } catch (IOException | InterruptedException e) {
+      return null;
+    }
+  }
+
+  public boolean parseCertificationCompleted(String response, String certificationName) {
+    try {
+      JSONArray certInfoArray = (new JSONObject(response)).getJSONArray("dsGrdtnCertInfo");
+
+      for (int i = 0; i < certInfoArray.length(); i++) {
+        JSONObject element = certInfoArray.getJSONObject(i);
+        if (element.getString("CERT_DIV_CN").equals(certificationName)) {
+          return element.getString("PASS_YN").equals("Y");
+        }
+      }
+    } catch (JSONException je) {
+
+    }
+    return false;
   }
 }
