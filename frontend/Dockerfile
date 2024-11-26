@@ -1,10 +1,10 @@
 # Build environment
 FROM node:22 AS build
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json package-lock.json ./
+RUN npm install
 COPY . .
-RUN yarn build
+RUN npm run build
 
 # Production environment
 FROM nginx:stable-alpine
