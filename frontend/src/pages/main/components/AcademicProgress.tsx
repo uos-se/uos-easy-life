@@ -85,7 +85,14 @@ export function AcademicProgress() {
       </h2>
       <div className="flex flex-col">
         {barData.map((item, index) => (
-          <div key={index} className="flex items-center mb-2 text-lg">
+          <div
+            key={index}
+            className="flex items-center mb-2 text-sm hover:bg-gray-100 p-0.5 hover:cursor-pointer transition duration-200"
+            onClick={() => {
+              console.log(index);
+              // fetchRecommendedCourses()
+            }}
+          >
             <div className="w-1/4 text-right pr-2">{item.name}</div>
             <div className="relative w-7/12 bg-gray-200 rounded">
               <div
@@ -93,13 +100,15 @@ export function AcademicProgress() {
                 style={{ width: `${item.value}%` }}
               ></div>
             </div>
-            <div className="ml-2">{item.value.toFixed(1)}%</div>
+            <div className="ml-2">
+              <strong>{item.completed}</strong>/{item.required}
+            </div>
           </div>
         ))}
       </div>
       <div className="mt-2">
         <span
-          className={`p-2 rounded-lg shadow-md ${
+          className={`p-2.5 rounded-lg shadow-md text-sm ${
             totalGradePointAverage! < minimumTotalGradePointAverage!
               ? "bg-red-100"
               : "bg-blue-100"
