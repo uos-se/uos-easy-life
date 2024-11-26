@@ -1,54 +1,71 @@
 import { Header } from "@/components/layout/Header";
 import { UserInfo } from "@/types/UserInfo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
 import { useSessionStore } from "@/store/sessionStore";
+import { ControllerService } from "@/services/ControllerService";
+import { UserFullInfo } from "@/models/UserFullInfo";
+
+const demoUser: UserInfo = {
+  name: "홍길동",
+  studentId: "2019123456",
+  major: "컴퓨터공학과",
+};
 
 const fetchUserInfo = async (session: string): Promise<UserInfo> => {
-  const res = await fetch(`/api/user/full?session=${session}`);
-  const userInfo = await res.json();
-  return userInfo as UserInfo;
+  const userInfo: UserFullInfo = await ControllerService.getUserFullInfo(
+    session
+  );
+  return {
+    name: userInfo.name || demoUser.name,
+    studentId: userInfo.studentId || demoUser.studentId,
+    major: userInfo.major || demoUser.major,
+  };
 };
 
 export function Main() {
   const { session } = useSessionStore();
 
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    name: "홍길동",
-    studentId: "2019123456",
-    major: "컴퓨터공학과",
-  });
+  const [userInfo, setUserInfo] = useState<UserInfo>(demoUser);
 
   const [isSync, setIsSync] = useState<boolean>(false);
   const nav = useNavigate();
 
   const onSync = async () => {
-    setIsSync(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSync(false);
     if (!session) return;
-    const { key, id, password } = session;
-    await fetch(
-      `/api/user/sync?session=${key}&portalId=${id}&portalPassword=${password}`
-    );
-    const userInfo = await fetchUserInfo(key);
-    setUserInfo(userInfo);
+    try {
+      setIsSync(true);
+      const { key, id, password } = session;
+
+      await ControllerService.syncUser(key, id, password);
+
+      const userInfo = await fetchUserInfo(key);
+      setUserInfo(userInfo);
+    } catch (err) {
+      console.error("Error during user sync:", err); // 에러 로깅
+      alert("User sync failed. Please try again."); // 사용자 피드백
+    } finally {
+      setIsSync(false);
+    }
     // setCourses(courses);
   };
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     nav("/login");
-  //     return;
-  //   }
+  useEffect(() => {
+    // if (!session) {
+    //   nav("/login");
+    //   return;
+    // }
 
-  //   (async () => {
-  //     const userInfo = await fetchUserInfo(session.key);
-  //     setUserInfo(userInfo);
-  //   })();
-  // }, [session, nav]);
+    //todo: 위에 주석 풀면서 if(session)도 삭제
+    if (session) {
+      (async () => {
+        const userInfo = await fetchUserInfo(session.key);
+        setUserInfo(userInfo);
+      })();
+    }
+  }, [session, nav]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-indigo-50">
