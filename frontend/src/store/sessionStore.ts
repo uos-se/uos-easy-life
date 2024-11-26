@@ -1,4 +1,4 @@
-import { ControllerService } from "@/services/ControllerService";
+import { ControllerService } from "@/api/services/ControllerService";
 import { create } from "zustand";
 
 export interface Session {

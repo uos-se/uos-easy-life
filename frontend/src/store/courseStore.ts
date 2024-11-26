@@ -104,7 +104,7 @@ export const useCourseStore = create<CourseStore>((set) => ({
     },
   ],
   setCourses: (courses) => set({ courses, filteredCourses: courses }),
-  filterCourses: (criteria) =>
+  filterCourses: () =>
     set((state) => ({
       filteredCourses: state.courses.sort(
         (a, b) => a.lectureCredit - b.lectureCredit
