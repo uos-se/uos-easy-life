@@ -71,3 +71,5 @@ export const useSessionStore = create<SessionStore>((set) => ({
     }
   },
 }));
+
+export const getSession = () => useSessionStore.getState().session;

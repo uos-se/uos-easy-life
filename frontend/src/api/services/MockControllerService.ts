@@ -1,13 +1,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from "../core/CancelablePromise";
+import { CancelablePromise } from "../core/CancelablePromise";
 import { request as __request } from "../core/request";
 import type { User } from "../models/User";
 import type { UserAcademicStatusDTO } from "../models/UserAcademicStatusDTO";
 import type { UserFullInfo } from "../models/UserFullInfo";
 
-export class ControllerService {
+export class MockControllerService {
   /**
    * @param portalId
    * @param portalPassword
@@ -71,9 +71,9 @@ export class ControllerService {
    * @returns UserFullInfo OK
    * @throws ApiError
    */
-  public static getUserFullInfo(
+  public static async getUserFullInfo(
     session: string
-  ): CancelablePromise<UserFullInfo> {
+  ): Promise<CancelablePromise<UserFullInfo>> {
     return __request({
       method: "GET",
       path: `/api/user/full`,
@@ -88,15 +88,30 @@ export class ControllerService {
    * @returns UserAcademicStatusDTO OK
    * @throws ApiError
    */
-  public static getUserAcademicStatus(
+  public static async getUserAcademicStatus(
     session: string
-  ): CancelablePromise<UserAcademicStatusDTO> {
-    return __request({
-      method: "GET",
-      path: `/api/user/academic-status`,
-      query: {
-        session: session,
-      },
+  ): Promise<CancelablePromise<UserAcademicStatusDTO>> {
+    const mockUserAcademicStatus: UserAcademicStatusDTO = {
+      totalRequiredCredit: 120,
+      totalCompletedCredit: 90,
+      majorRequiredCredit: 60,
+      majorCompletedCredit: 45,
+      majorEssentialRequiredCredit: 30,
+      majorEssentialCompletedCredit: 20,
+      liberalRequiredCredit: 30,
+      liberalCompletedCredit: 25,
+      liberalEssentialRequiredCredit: 15,
+      liberalEssentialCompletedCredit: 10,
+      engineeringRequiredCredit: 40,
+      engineeringCompletedCredit: 30,
+      generalRequiredCredit: 20,
+      generalCompletedCredit: 15,
+      minimumTotalGradePointAverage: 2.0,
+      totalGradePointAverage: 3.5,
+    };
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return new CancelablePromise((resolve, reject) => {
+      resolve(mockUserAcademicStatus);
     });
   }
 
