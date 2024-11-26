@@ -1,5 +1,5 @@
-import { UserFullInfo } from "@/models/UserFullInfo";
-import { ControllerService } from "@/services/ControllerService";
+import { UserFullInfo } from "@/api/models/UserFullInfo";
+import { ControllerService } from "@/api/services/ControllerService";
 import { create } from "zustand";
 import { getSession } from "./sessionStore";
 

@@ -1,5 +1,5 @@
-import { UserAcademicStatusDTO } from "@/models/UserAcademicStatusDTO";
-import { MockControllerService } from "@/services/MockControllerService";
+import { UserAcademicStatusDTO } from "@/api/models/UserAcademicStatusDTO";
+import { MockControllerService } from "@/api/services/MockControllerService";
 import { create } from "zustand";
 
 export interface UserAcademicStatusStore extends UserAcademicStatusDTO {

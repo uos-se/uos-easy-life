@@ -1,4 +1,4 @@
-import { Course } from "@/models/Course";
+import { Course } from "@/api/models/Course";
 import { create } from "zustand";
 
 export interface CourseStore {
