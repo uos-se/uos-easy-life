@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api-generate": "wget -O ./temp/api-spec.json http://localhost:8080/v3/api-docs && openapi --input ./temp/api-spec.json --output ./src"
+    "api": "wget -O ./openapi.json http://localhost:8080/v3/api-docs && rm -rf ./src/api && openapi --input ./openapi.json --output ./src/api"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",

@@ -6,6 +6,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Login } from "./pages/login/Login";
 import { Main } from "./pages/main/Main";
 import { SessionProvider } from "./context/SessionProvider";
+import { OpenAPI } from "./api";
+
+OpenAPI.BASE = location.origin;
 
 const router = createBrowserRouter([
   {
