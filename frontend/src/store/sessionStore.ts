@@ -9,7 +9,7 @@ export interface Session {
 
 export interface SessionStore {
   session: Session | null;
-  login: (id: string, password: string) => void;
+  login: (id: string, password: string) => Promise<boolean>;
   logout: () => void;
   validateSessionKey: (session: Session) => Promise<boolean>;
 }
