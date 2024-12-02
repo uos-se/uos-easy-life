@@ -1,9 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCourseStore } from "@/store/courseStore";
-import { useUserAcademicStatusStore } from "@/store/userAcademicStatusStore";
+import { useUserStore } from "@/store/userStore";
 
 export function AcademicProgress() {
-  const { fetchRecommendedCourses } = useCourseStore();
+  const { academicStatus } = useUserStore();
+
+  if (!academicStatus) return;
+
   const {
     totalRequiredCredit,
     totalCompletedCredit,
@@ -21,7 +23,7 @@ export function AcademicProgress() {
     generalCompletedCredit,
     minimumTotalGradePointAverage,
     totalGradePointAverage,
-  } = useUserAcademicStatusStore();
+  } = academicStatus;
 
   const calc = (complete: number, required: number) => {
     return Math.min((complete / required) * 100, 100);
@@ -91,14 +93,12 @@ export function AcademicProgress() {
             onClick={() => {
               console.log(index);
               // fetchRecommendedCourses()
-            }}
-          >
+            }}>
             <div className="w-1/4 text-right pr-2">{item.name}</div>
             <div className="relative w-7/12 bg-gray-200 rounded">
               <div
                 className="top-0 left-0 h-6 bg-muted-foreground rounded"
-                style={{ width: `${item.value}%` }}
-              ></div>
+                style={{ width: `${item.value}%` }}></div>
             </div>
             <div className="ml-2">
               <strong>{item.completed}</strong>/{item.required}
@@ -112,8 +112,7 @@ export function AcademicProgress() {
             totalGradePointAverage! < minimumTotalGradePointAverage!
               ? "bg-red-100"
               : "bg-blue-100"
-          }`}
-        >
+          }`}>
           평균 평점: <strong>{totalGradePointAverage}</strong>
         </span>
         <span className="ml-2 text-xs text-muted-foreground">

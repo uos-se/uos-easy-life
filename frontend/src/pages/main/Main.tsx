@@ -1,41 +1,32 @@
 import { Header } from "@/components/layout/Header";
-import { useSessionStore } from "@/store/sessionStore";
-// import { UserInfo } from "@/types/UserInfo";
-import { useUserAcademicStatusStore } from "@/store/userAcademicStatusStore";
-import { useUserInfoStore } from "@/store/userInfoStore";
+import { useUserStore } from "@/store/userStore";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
+import { useNavigate } from "react-router-dom";
 
 export function Main() {
-  const { session } = useSessionStore();
-
-  const { name, studentId, major, fetchAllUserStatus } = useUserInfoStore();
-  const { fetchAcademicStatus } = useUserAcademicStatusStore();
-
-  const [isSync, setIsSync] = useState<boolean>(false);
+  const { session, userInfo, load, sync } = useUserStore();
   const nav = useNavigate();
+  const [isSync, setIsSync] = useState<boolean>(false);
+  const { name, studentId, major } = userInfo || {};
 
-  const onSync = async () => {
+  const onHandleSync = async () => {
     if (!session) return;
-    const { key, id, password } = session;
-    await fetch(
-      `/api/user/sync?session=${key}&portalId=${id}&portalPassword=${password}`
-    );
-    // setCourses(courses);
+    setIsSync(true);
+    await sync();
+    setIsSync(false);
   };
 
   useEffect(() => {
-    fetchAllUserStatus();
-    fetchAcademicStatus();
-  }, []);
+    if (!session) {
+      nav("/login");
+      return;
+    }
+    load();
+  }, [session, load, nav]);
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     nav("/login");
-  //     return;
-  //   }
+  if (!session) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-indigo-50">
@@ -56,20 +47,18 @@ export function Main() {
                 Last Updated: 2024-10-25 13:12:47
               </span>
               <button
-                onClick={onSync}
+                onClick={onHandleSync}
                 className="flex items-center space-x-2 bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-colors duration-200"
-                disabled={isSync}
-              >
+                disabled={isSync}>
                 <span>{isSync ? "Syncing..." : "Sync"}</span>
-                <svg
-                  className={`w-5 h-5 ${isSync ? "animate-spin" : ""}`}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm0 16v2a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8z"
-                  />
-                </svg>
+                {isSync && (
+                  <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm0 16v2a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8z"
+                    />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
