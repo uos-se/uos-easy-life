@@ -10,10 +10,7 @@ export interface UserInfoStore extends UserFullInfo {
 export const useUserInfoStore = create<UserInfoStore>((set) => ({
   fetchAllUserStatus: async () => {
     const session = getSession()!;
-    const user = await ControllerService.getUserFullInfo(
-      // session.key
-      ""
-    );
+    const user = await ControllerService.getUserFullInfo(session.key);
     set({
       ...user,
     });

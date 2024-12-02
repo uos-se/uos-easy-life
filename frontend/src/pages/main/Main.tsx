@@ -1,10 +1,8 @@
 import { Header } from "@/components/layout/Header";
 import { useSessionStore } from "@/store/sessionStore";
-// import { UserInfo } from "@/types/UserInfo";
 import { useUserAcademicStatusStore } from "@/store/userAcademicStatusStore";
 import { useUserInfoStore } from "@/store/userInfoStore";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
 
@@ -15,14 +13,21 @@ export function Main() {
   const { fetchAcademicStatus } = useUserAcademicStatusStore();
 
   const [isSync, setIsSync] = useState<boolean>(false);
-  const nav = useNavigate();
 
   const onSync = async () => {
     if (!session) return;
     const { key, id, password } = session;
-    await fetch(
-      `/api/user/sync?session=${key}&portalId=${id}&portalPassword=${password}`
-    );
+
+    setIsSync(true);
+    try {
+      await fetch(
+        `/api/user/sync?session=${key}&portalId=${id}&portalPassword=${password}`
+      );
+    } catch {
+      // TODO: Handle error
+    } finally {
+      setIsSync(false);
+    }
     // setCourses(courses);
   };
 
@@ -58,13 +63,11 @@ export function Main() {
               <button
                 onClick={onSync}
                 className="flex items-center space-x-2 bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-colors duration-200"
-                disabled={isSync}
-              >
+                disabled={isSync}>
                 <span>{isSync ? "Syncing..." : "Sync"}</span>
                 <svg
                   className={`w-5 h-5 ${isSync ? "animate-spin" : ""}`}
-                  viewBox="0 0 24 24"
-                >
+                  viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
                     d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm0 16v2a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8z"
