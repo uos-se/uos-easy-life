@@ -1,8 +1,8 @@
-import { useSessionStore } from "@/store/sessionStore";
+import { useUserStore } from "@/store/userStore";
 import { useNavigate } from "react-router-dom";
 
 export function Header() {
-  const { session, logout } = useSessionStore();
+  const { session, logout } = useUserStore();
   const nav = useNavigate();
 
   return (
@@ -12,15 +12,13 @@ export function Header() {
         {session ? (
           <button
             onClick={() => logout()}
-            className="text-gray-600 hover:text-indigo-600 transition-colors duration-200"
-          >
+            className="text-gray-600 hover:text-indigo-600 transition-colors duration-200">
             Logout
           </button>
         ) : (
           <button
             onClick={() => nav("/login")}
-            className="text-gray-600 hover:text-indigo-600 transition-colors duration-200"
-          >
+            className="text-gray-600 hover:text-indigo-600 transition-colors duration-200">
             Login
           </button>
         )}

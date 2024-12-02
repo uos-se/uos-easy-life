@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useSessionStore } from "@/store/sessionStore";
+import { useUserStore } from "@/store/userStore";
 import { useNavigate } from "react-router-dom";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -17,7 +17,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login } = useSessionStore();
+  const { login } = useUserStore();
   const navigate = useNavigate();
 
   async function onSubmit(event: React.SyntheticEvent) {

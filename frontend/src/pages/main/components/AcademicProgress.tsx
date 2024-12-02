@@ -1,7 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserAcademicStatusStore } from "@/store/userAcademicStatusStore";
+import { useUserStore } from "@/store/userStore";
 
 export function AcademicProgress() {
+  const { academicStatus } = useUserStore();
+
+  if (!academicStatus) return;
+
   const {
     totalRequiredCredit,
     totalCompletedCredit,
@@ -19,7 +23,7 @@ export function AcademicProgress() {
     generalCompletedCredit,
     minimumTotalGradePointAverage,
     totalGradePointAverage,
-  } = useUserAcademicStatusStore();
+  } = academicStatus;
 
   const calc = (complete: number, required: number) => {
     return Math.min((complete / required) * 100, 100);

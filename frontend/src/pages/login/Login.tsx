@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuthForm } from "./components/UserAuthForm";
-import { useSessionStore } from "@/store/sessionStore";
+import { useUserStore } from "@/store/userStore";
 
 export function Login() {
-  const { session } = useSessionStore();
+  const { session } = useUserStore();
   const nav = useNavigate();
 
   // Check if the session is valid. If valid, redirect to the main page.
@@ -43,15 +43,13 @@ export function Login() {
               By clicking continue, you agree to our{" "}
               <a
                 href="/terms"
-                className="underline underline-offset-4 hover:text-primary"
-              >
+                className="underline underline-offset-4 hover:text-primary">
                 Terms of Service
               </a>{" "}
               and{" "}
               <a
                 href="/privacy"
-                className="underline underline-offset-4 hover:text-primary"
-              >
+                className="underline underline-offset-4 hover:text-primary">
                 Privacy Policy
               </a>
               .

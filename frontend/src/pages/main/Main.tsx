@@ -1,22 +1,19 @@
 import { Header } from "@/components/layout/Header";
-import { useSessionStore } from "@/store/sessionStore";
-import { useUserAcademicStatusStore } from "@/store/userAcademicStatusStore";
-import { useUserInfoStore } from "@/store/userInfoStore";
+import { useUserStore } from "@/store/userStore";
 import { useEffect, useState } from "react";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
+import { useNavigate } from "react-router-dom";
 
 export function Main() {
-  const { session } = useSessionStore();
-
-  const { name, studentId, major, fetchAllUserStatus } = useUserInfoStore();
-  const { fetchAcademicStatus } = useUserAcademicStatusStore();
-
+  const { session, userInfo, load } = useUserStore();
+  const nav = useNavigate();
   const [isSync, setIsSync] = useState<boolean>(false);
+  const { name, studentId, major } = userInfo || {};
 
   const onSync = async () => {
     if (!session) return;
-    const { key, id, password } = session;
+    const { key, portalId: id, portalPassword: password } = session;
 
     setIsSync(true);
     try {
@@ -28,19 +25,15 @@ export function Main() {
     } finally {
       setIsSync(false);
     }
-    // setCourses(courses);
   };
 
   useEffect(() => {
-    fetchAllUserStatus();
-    fetchAcademicStatus();
-  }, []);
-
-  // useEffect(() => {
-  //   if (!session) {
-  //     nav("/login");
-  //     return;
-  //   }
+    if (!session) {
+      nav("/login");
+      return;
+    }
+    load();
+  }, [session, load, nav]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-indigo-50">
