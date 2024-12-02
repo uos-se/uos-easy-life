@@ -29,6 +29,10 @@ public class AuthService {
   }
 
   public String login(String portalId, String portalPassword) {
+    // Null check
+    if (portalId == null || portalPassword == null) {
+      throw new IllegalArgumentException("Portal ID or password is null.");
+    }
 
     // 먼저 DB에 사용자가 있는지 확인한다.
     User user = userRepository.findByPortalId(portalId);

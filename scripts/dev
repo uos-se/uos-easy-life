@@ -21,8 +21,8 @@ java -jar build/libs/*-SNAPSHOT.jar&
 
 # Start the frontend
 cd $ROOT/frontend
-npm install
-npm run dev&
+yarn install
+yarn dev&
 
 # Sleep forever
 while true; do

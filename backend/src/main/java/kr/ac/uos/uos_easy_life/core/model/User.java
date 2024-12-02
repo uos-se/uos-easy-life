@@ -31,7 +31,6 @@ public class User {
     int keyLength = 256;
     char[] passwordChars = password.toCharArray();
     byte[] saltBytes = salt.getBytes();
-    Arrays.fill(passwordChars, Character.MIN_VALUE);
     PBEKeySpec spec = new PBEKeySpec(passwordChars, saltBytes, iteration, keyLength);
     try {
       SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -152,6 +151,9 @@ public class User {
   }
 
   public String setPassword(String password) {
+    if (password == null) {
+      throw new IllegalArgumentException("Password cannot be null.");
+    }
     this.salt = getNewSalt();
     this.hashedPortalPassword = hashPassword(password, salt);
     this.updateTimestamp();
@@ -159,6 +161,9 @@ public class User {
   }
 
   public boolean checkPassword(String password) {
+    if (password == null) {
+      throw new IllegalArgumentException("Password is null.");
+    }
     return hashPassword(password, salt).equals(hashedPortalPassword);
   }
 

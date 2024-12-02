@@ -1,5 +1,5 @@
 import { UserAcademicStatusDTO } from "@/api/models/UserAcademicStatusDTO";
-import { MockControllerService } from "@/api/services/MockControllerService";
+import { ControllerService } from "@/api/services/ControllerService";
 import { create } from "zustand";
 
 export interface UserAcademicStatusStore extends UserAcademicStatusDTO {
@@ -9,7 +9,7 @@ export interface UserAcademicStatusStore extends UserAcademicStatusDTO {
 export const useUserAcademicStatusStore = create<UserAcademicStatusStore>(
   (set) => ({
     fetchAcademicStatus: async () => {
-      const academicStatus = await MockControllerService.getUserAcademicStatus(
+      const academicStatus = await ControllerService.getUserAcademicStatus(
         ""
         // session.key
       );
