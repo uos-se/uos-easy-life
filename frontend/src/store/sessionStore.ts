@@ -21,7 +21,10 @@ export const useSessionStore = create<SessionStore>((set) => ({
 
   login: async (id, password) => {
     try {
-      const sessionKey = await ControllerService.login(id, password);
+      const sessionKey = await ControllerService.login({
+        portalId: id,
+        portalPassword: password,
+      });
 
       // 세션 키가 없거나 응답이 비정상적인 경우
       if (!sessionKey) {
