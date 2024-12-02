@@ -17,6 +17,7 @@ export interface SessionStore {
   logout: () => void;
   initialize: () => Promise<void>;
   load: () => Promise<void>;
+  sync: () => Promise<void>;
 }
 
 const LOCAL_STORAGE_KEY = "uos-easy-life-session";
@@ -106,14 +107,34 @@ export const useUserStore = create<SessionStore>((set) => ({
     const session = useUserStore.getState().session;
     if (!session) return;
 
-    const userInfo = await ControllerService.getUserFullInfo(session.key);
-    const academicStatus = await ControllerService.getUserAcademicStatus(
+    const userInfoPromise = ControllerService.getUserFullInfo(session.key);
+    const academicStatusPromise = ControllerService.getUserAcademicStatus(
       session.key
     );
+
+    const [userInfo, academicStatus] = await Promise.all([
+      userInfoPromise,
+      academicStatusPromise,
+    ]);
 
     set({
       userInfo,
       academicStatus,
     });
+  },
+
+  sync: async () => {
+    const session = useUserStore.getState().session;
+    if (!session) return;
+
+    try {
+      await ControllerService.syncUser(
+        session.key,
+        session.portalId,
+        session.portalPassword
+      );
+    } catch (error) {
+      console.error("Sync failed:", error);
+    }
   },
 }));
