@@ -1,9 +1,9 @@
 import { Header } from "@/components/layout/Header";
 import { useUserStore } from "@/store/userStore";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
-import { useNavigate } from "react-router-dom";
 
 function formatTimestamp(timestamp: number | null | undefined): string {
   if (!timestamp) return "Never";
@@ -55,7 +55,8 @@ export function Main() {
               <button
                 onClick={onHandleSync}
                 className="flex items-center space-x-2 bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-colors duration-200"
-                disabled={isSync}>
+                disabled={isSync}
+              >
                 <span>{isSync ? "Syncing..." : "Sync"}</span>
                 {isSync && (
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
@@ -69,10 +70,17 @@ export function Main() {
             </div>
           </div>
         </section>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <AcademicProgress />
-          <CourseList />
-        </div>
+        <DragDropContext
+          onDragEnd={(a, b) => {
+            console.log(a, b);
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <AcademicProgress />
+            <CourseList />
+          </div>
+          <Scheduler />
+        </DragDropContext>
       </main>
     </div>
   );
