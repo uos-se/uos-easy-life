@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import kr.ac.uos.uos_easy_life.core.interfaces.AcademicStatusRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.CourseRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.RegistrationRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
@@ -13,6 +14,7 @@ import kr.ac.uos.uos_easy_life.core.interfaces.UserRepository;
 import kr.ac.uos.uos_easy_life.core.model.Course;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.User;
+import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatusDTO;
 import kr.ac.uos.uos_easy_life.core.model.UserFullInfo;
 
@@ -22,15 +24,18 @@ public class UserService {
   private final CourseRepository courseRepository;
   private final RegistrationRepository registrationRepository;
   private final UosSessionManager uosSessionManager;
+  private final AcademicStatusRepository academicStatusRepository;
   private final UosApi uosApi;
 
   public UserService(UserRepository userRepository, CourseRepository courseRepository,
       RegistrationRepository registrationRepository, UosSessionManager uosSessionManager,
+      AcademicStatusRepository academicStatusRepository,
       UosApi uosApi) {
     this.userRepository = userRepository;
     this.courseRepository = courseRepository;
     this.registrationRepository = registrationRepository;
     this.uosSessionManager = uosSessionManager;
+    this.academicStatusRepository = academicStatusRepository;
     this.uosApi = uosApi;
   }
 
@@ -84,35 +89,45 @@ public class UserService {
       }
       registrationRepository.register(userId, course.getId());
     }
+
+    // Sync academic status
+    UserAcademicStatus academicStatus = uosApi.getUserAcademicStatus(session, user.getName(), user.getStudentId());
+    if (academicStatus == null) {
+      throw new IllegalArgumentException("학적 정보 동기화에 실패했습니다.");
+    }
+    academicStatusRepository.setAcademicStatus(userId, academicStatus);
   }
 
   public UserAcademicStatusDTO getUserAcademicStatus(String userId) {
-    // TODO: Implement this method
-    // Mock data
+    UserAcademicStatus academicStatus = academicStatusRepository.getAcademicStatus(userId);
+    if (academicStatus == null) {
+      throw new IllegalArgumentException("학적 정보가 존재하지 않습니다.");
+    }
 
     int totalRequiredCredit = 130;
-    int totalCompletedCredit = 100;
+    int totalCompletedCredit = academicStatus.getTotalCompletedCredit();
 
-    int majorRequiredCredit = 70;
-    int majorCompletedCredit = 60;
+    int majorRequiredCredit = 72;
+    int majorCompletedCredit = academicStatus.getMajorCompletedCredit();
 
     int majorEssentialRequiredCredit = 24;
-    int majorEssentialCompletedCredit = 20;
+    int majorEssentialCompletedCredit = academicStatus.getMajorEssentialCompletedCredit();
 
-    int liberalRequiredCredit = 30;
-    int liberalCompletedCredit = 20;
+    int liberalRequiredCredit = 36;
+    int liberalCompletedCredit = academicStatus.getLiberalCompletedCredit();
 
     int liberalEssentialRequiredCredit = 14;
-    int liberalEssentialCompletedCredit = 10;
+    int liberalEssentialCompletedCredit = academicStatus.getLiberalEssentialCompletedCredit();
 
     int engineeringRequiredCredit = 8;
-    int engineeringCompletedCredit = 6;
+    int engineeringCompletedCredit = academicStatus.getEngineeringCompletedCredit();
 
-    int generalRequiredCredit = 30;
-    int generalCompletedCredit = 20;
+    // generalCredit(일반선택)은 요구 학점이 없다. 대충 현재학점==
+    int generalRequiredCredit = academicStatus.getGeneralCompletedCredit();
+    int generalCompletedCredit = academicStatus.getGeneralCompletedCredit();
 
     double minimumTotalGradePointAverage = 2.0;
-    double totalGradePointAverage = 3.5;
+    double totalGradePointAverage = academicStatus.getTotalGradePointAverage();
 
     return new UserAcademicStatusDTO(
         totalRequiredCredit,
