@@ -94,6 +94,13 @@ public class MockCourseRepository implements CourseRepository {
   }
 
   @Override
+  public Course findByName(String name) {
+    // 주어진 이름에 해당하는 코스를 찾아 반환
+    Optional<Course> course = courses.stream().filter(c -> c.getLectureName().equals(name)).findFirst();
+    return course.orElse(null); // 없으면 null 반환
+  }
+
+  @Override
   public List<Course> findAll() {
     // 저장된 모든 코스를 반환
     return new ArrayList<>(courses);

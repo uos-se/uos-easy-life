@@ -8,6 +8,8 @@ public interface CourseRepository {
 
   public Course findByCode(String code);
 
+  public Course findByName(String name);
+
   public List<Course> findAll();
 
   public void save(Course course);
