@@ -6,7 +6,7 @@ import kr.ac.uos.uos_easy_life.core.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+//@Repository
 public class MockUserRepository implements UserRepository {
 
   private final List<User> users = new ArrayList<>();

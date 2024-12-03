@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import kr.ac.uos.uos_easy_life.core.interfaces.RegistrationRepository;
 
-@Repository
+//@Repository
 public class MockRegistrationRepository implements RegistrationRepository {
 
   // 사용자별로 등록된 강의를 저장할 리스트
