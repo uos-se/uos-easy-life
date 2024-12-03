@@ -3,9 +3,9 @@ package kr.ac.uos.uos_easy_life.core.model;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
@@ -74,9 +74,6 @@ public class User {
     // 학과는 학번의 5-6번째 자리에 해당하는 학과 코드로부터 추출한다.
     int departmentsCode = Integer.parseInt(studentId.substring(4, 6));
     Department department = Department.fromDepartmentCode(departmentsCode);
-    if (department == null) {
-      throw new IllegalArgumentException("학과 코드가 잘못되었습니다.");
-    }
     this.department = department;
 
     this.setCurrentGrade(currentGrade);

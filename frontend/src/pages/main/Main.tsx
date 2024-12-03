@@ -5,6 +5,12 @@ import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
 import { useNavigate } from "react-router-dom";
 
+function formatTimestamp(timestamp: number | null | undefined): string {
+  if (!timestamp) return "Never";
+  const date = new Date(timestamp);
+  return date.toLocaleString();
+}
+
 export function Main() {
   const { session, userInfo, load, sync } = useUserStore();
   const nav = useNavigate();
@@ -44,7 +50,7 @@ export function Main() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-500 cursor-text">
-                Last Updated: 2024-10-25 13:12:47
+                Last Updated: {formatTimestamp(userInfo?.updatedAt)}
               </span>
               <button
                 onClick={onHandleSync}

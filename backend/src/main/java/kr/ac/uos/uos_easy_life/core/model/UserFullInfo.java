@@ -9,9 +9,10 @@ public class UserFullInfo extends UserBasicInfo {
   private int grade;
   private String status;
   private List<Course> courses;
+  private long updatedAt;
 
   public UserFullInfo(String name, String studentId, String email, String phone, String major,
-      int grade, String status, List<Course> courses) {
+      int grade, String status, List<Course> courses, long updatedAt) {
     super(name, studentId);
     this.email = email;
     this.phone = phone;
@@ -19,6 +20,7 @@ public class UserFullInfo extends UserBasicInfo {
     this.grade = grade;
     this.status = status;
     this.courses = courses;
+    this.updatedAt = updatedAt;
   }
 
   public String getEmail() {
@@ -43,5 +45,9 @@ public class UserFullInfo extends UserBasicInfo {
 
   public List<Course> getCourses() {
     return courses;
+  }
+
+  public long getUpdatedAt() {
+    return updatedAt;
   }
 }
