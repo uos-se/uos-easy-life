@@ -1,5 +1,7 @@
 package kr.ac.uos.uos_easy_life.infra;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,11 +78,9 @@ public class Controller {
   }
 
   @GetMapping("/user/recommended-course")
-  public Course[] recommendCourse(@RequestParam String session) {
-    // TODO: Implement here
-    Course courses[] = new Course[1];
-    courses[0] = new Course("1", "test", "test", 3, 3);
-    return courses;
+  public List<Course> recommendCourse(@RequestParam String session) {
+    String userId = authService.getUserIdBySession(session);
+    return userService.getRecommendedCourses(userId);
   }
 }
 
