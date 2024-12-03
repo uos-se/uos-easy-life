@@ -8,4 +8,12 @@ export type Course = {
     lectureCode?: string;
     lectureCredit?: number;
     lectureGrade?: number;
+    generalCredit?: number;
+    designCredit?: number;
+    majorElective?: boolean;
+    majorEssential?: boolean;
+    liberalElective?: boolean;
+    liberalEssential?: boolean;
+    engineering?: boolean;
+    basicAcademic?: boolean;
 }

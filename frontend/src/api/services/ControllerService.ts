@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Course } from '../models/Course';
 import type { LoginDTO } from '../models/LoginDTO';
 import type { User } from '../models/User';
 import type { UserAcademicStatusDTO } from '../models/UserAcademicStatusDTO';
@@ -62,6 +63,23 @@ export class ControllerService {
                 'session': session,
                 'portalId': portalId,
                 'portalPassword': portalPassword,
+            },
+        });
+    }
+
+    /**
+     * @param session
+     * @returns Course OK
+     * @throws ApiError
+     */
+    public static recommendCourse(
+        session: string,
+    ): CancelablePromise<Array<Course>> {
+        return __request({
+            method: 'GET',
+            path: `/api/user/recommended-course`,
+            query: {
+                'session': session,
             },
         });
     }
