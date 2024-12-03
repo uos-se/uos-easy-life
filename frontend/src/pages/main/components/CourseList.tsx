@@ -10,7 +10,7 @@ export function CourseList() {
         다음학기에 들으면 좋을 과목
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {recommendedCourses !== undefined ? (
+        {recommendedCourses ? (
           recommendedCourses.map((course) => (
             <div
               key={course.id}

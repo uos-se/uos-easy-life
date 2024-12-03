@@ -5,7 +5,7 @@ export { ApiError } from './core/ApiError';
 export { CancelablePromise } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 
-export type { Course } from './models/Course';
+export { Course } from './models/Course';
 export type { LoginDTO } from './models/LoginDTO';
 export { User } from './models/User';
 export type { UserAcademicStatusDTO } from './models/UserAcademicStatusDTO';
