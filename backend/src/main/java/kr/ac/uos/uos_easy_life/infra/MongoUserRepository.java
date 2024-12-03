@@ -1,7 +1,6 @@
 package kr.ac.uos.uos_easy_life.infra;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.client.MongoCollection;

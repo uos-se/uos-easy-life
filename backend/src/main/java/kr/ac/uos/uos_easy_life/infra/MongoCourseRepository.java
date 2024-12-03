@@ -10,8 +10,9 @@ import com.mongodb.client.MongoCollection;
 
 import kr.ac.uos.uos_easy_life.core.interfaces.CourseRepository;
 import kr.ac.uos.uos_easy_life.core.model.Course;
+import kr.ac.uos.uos_easy_life.core.model.Department;
 
-//@Repository
+@Repository
 public class MongoCourseRepository implements CourseRepository {
 
   private final MongoCollection<Document> courseCollection;
@@ -29,6 +30,12 @@ public class MongoCourseRepository implements CourseRepository {
   @Override
   public Course findByCode(String code) {
     Document document = courseCollection.find(new Document("lecture_code", code)).first();
+    return document != null ? documentToCourse(document) : null;
+  }
+
+  @Override
+  public Course findByName(String name) {
+    Document document = courseCollection.find(new Document("lecture_name", name)).first();
     return document != null ? documentToCourse(document) : null;
   }
 
@@ -68,13 +75,13 @@ public class MongoCourseRepository implements CourseRepository {
         document.getString("lecture_code"),
         document.getInteger("lecture_credit"),
         document.getInteger("lecture_grade"),
+        (Department) document.get("department"),
         document.getBoolean("is_major_elective", false),
         document.getBoolean("is_major_essential", false),
         document.getBoolean("is_liberal_elective", false),
         document.getBoolean("is_liberal_essential", false),
         document.getBoolean("is_engineering", false),
         document.getBoolean("is_basic_academic", false),
-        document.getInteger("general_credit", 0),
         document.getInteger("design_credit", 0));
 
     return course;
@@ -86,13 +93,13 @@ public class MongoCourseRepository implements CourseRepository {
         .append("lecture_code", course.getLectureCode())
         .append("lecture_credit", course.getLectureCredit())
         .append("lecture_grade", course.getLectureGrade())
+        .append("department", course.getDepartment())
         .append("is_major_elective", course.isMajorElective())
         .append("is_major_essential", course.isMajorEssential())
         .append("is_liberal_elective", course.isLiberalElective())
         .append("is_liberal_essential", course.isLiberalEssential())
         .append("is_engineering", course.isEngineering())
         .append("is_basic_academic", course.isBasicAcademic())
-        .append("general_credit", course.getGeneralCredit())
         .append("design_credit", course.getDesignCredit());
   }
 }

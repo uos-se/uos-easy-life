@@ -1,11 +1,7 @@
 package kr.ac.uos.uos_easy_life.infra;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bson.Document;
 import org.springframework.stereotype.Repository;
@@ -26,89 +22,55 @@ public class MongoRegistrationRepository implements RegistrationRepository {
 
   @Override
   public void register(String userId, String courseId) {
-    UserRegistrationDTO userRegistration = findUserRegistration(userId);
-    if (userRegistration == null) {
-      registrationCollection.insertOne(
-          new Document("_id", userId)
-              .append("registered_courses", List.of(courseId)));
+    Document oldRegistration = registrationCollection.find(new Document("_id", userId)).first();
 
+    // If registration data is not in DB
+    if (oldRegistration == null) {
+      oldRegistration = new Document("_id", userId)
+          .append("registered_courses", List.of(courseId));
+      registrationCollection.insertOne(oldRegistration);
+      return;
+    }
+    // update process
+    List<String> updatedList = (List<String>) oldRegistration.get("registered_courses");
+    if (updatedList.contains(courseId)) {
       return;
     }
 
-    if (userRegistration.getRegisteredCourses().contains(courseId)) {
-      return;
-    }
-
-    List<String> updatedRegistration = userRegistration.getRegisteredCourses();
-    updatedRegistration.add(userId);
-
+    updatedList.add(courseId);
     registrationCollection.updateOne(new Document("_id", userId),
-        new Document("$set", new Document("registered_courses", updatedRegistration)));
+        new Document("$set", new Document("registered_courses", updatedList)));
   }
 
   @Override
   public void unregister(String userId, String courseId) {
-    UserRegistrationDTO userRegistration = findUserRegistration(userId);
-    if (userRegistration == null) {
+    Document oldRegistration = registrationCollection.find(new Document("_id", userId)).first();
+
+    // If registration data is not in DB
+    if (oldRegistration == null) {
+      return;
+    }
+    // update process
+    List<String> updatedList = (List<String>) oldRegistration.get("registered_courses");
+    if (!updatedList.contains(courseId)) {
       return;
     }
 
-    List<String> registeredCourses = userRegistration.getRegisteredCourses();
-    if (!registeredCourses.contains(courseId)) {
-      return;
-    }
-
-    registeredCourses.remove(courseId);
+    updatedList.remove(courseId);
     registrationCollection.updateOne(new Document("_id", userId),
-        new Document("$set", new Document("registeredCourses", registeredCourses)));
+        new Document("$set", new Document("registered_courses", updatedList)));
   }
 
   @Override
   public List<String> findRegisteredCourses(String userId) {
-    UserRegistrationDTO userRegistration = findUserRegistration(userId);
-    if (userRegistration == null) {
-      return null;
-    }
-
-    return userRegistration.getRegisteredCourses();
-  }
-
-  private UserRegistrationDTO findUserRegistration(String userId) {
     Document document = registrationCollection.find(new Document("_id", userId)).first();
-    return document != null ? documentToUserRegistration(document) : null;
-  }
-
-  private UserRegistrationDTO documentToUserRegistration(Document document) {
-    String userId = document.getString("_id");
-    Object obj = document.get("registered_courses");
-
-    List<String> registeredCourses = new ArrayList<>();
-    if (obj instanceof List) {
-      for (Object course : (List<?>) obj) {
-        if (course instanceof String) {
-          registeredCourses.add((String) course);
-        }
-      }
+    if (document == null) {
+      document = new Document("_id", userId)
+          .append("registered_courses", new ArrayList<String>());
+      registrationCollection.insertOne(document);
     }
 
-    return new UserRegistrationDTO(userId, registeredCourses);
-  }
-}
-
-class UserRegistrationDTO {
-  private String userId;
-  private List<String> registeredCourses;
-
-  public UserRegistrationDTO(String userId, List<String> registeredCourses) {
-    this.userId = userId;
-    this.registeredCourses = registeredCourses;
-  }
-
-  public String getUserId() {
-    return userId;
-  }
-
-  public List<String> getRegisteredCourses() {
+    List<String> registeredCourses = (List<String>) document.get("registered_courses");
     return registeredCourses;
   }
 }
