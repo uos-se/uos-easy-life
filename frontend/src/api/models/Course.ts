@@ -8,7 +8,7 @@ export type Course = {
     lectureCode?: string;
     lectureCredit?: number;
     lectureGrade?: number;
-    generalCredit?: number;
+    department?: Course.department;
     designCredit?: number;
     majorElective?: boolean;
     majorEssential?: boolean;
@@ -16,4 +16,14 @@ export type Course = {
     liberalEssential?: boolean;
     engineering?: boolean;
     basicAcademic?: boolean;
+}
+
+export namespace Course {
+
+    export enum department {
+        COMPUTER_SCIENCE = 'ComputerScience',
+        GENERAL_EDUCATION = 'GeneralEducation',
+    }
+
+
 }
