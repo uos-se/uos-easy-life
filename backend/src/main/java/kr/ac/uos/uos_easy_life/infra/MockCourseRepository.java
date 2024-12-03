@@ -14,7 +14,7 @@ import kr.ac.uos.uos_easy_life.core.interfaces.CourseRepository;
 import kr.ac.uos.uos_easy_life.core.model.Course;
 import kr.ac.uos.uos_easy_life.core.model.Department;
 
-@Repository
+//@Repository
 public class MockCourseRepository implements CourseRepository {
 
   // Course 리스트를 이용해 데이터를 저장
