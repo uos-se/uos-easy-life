@@ -45,7 +45,13 @@ export function Scheduler() {
               className="w-1/3 border-r pr-4"
             >
               <h3 className="font-semibold text-center pb-2 border-b">
-                Available Courses
+                교양 (12점 남음)
+              </h3>
+              <div className="p-3 mb-2 bg-gray-50 rounded border border-gray-200 cursor-pointer">
+                "공학도의 창업과 경영 (12 credits)"
+              </div>
+              <h3 className="font-semibold text-center pb-2 border-b">
+                전공 필수(3점 남음)
               </h3>
               {courses.map((course, index) => (
                 <Draggable
