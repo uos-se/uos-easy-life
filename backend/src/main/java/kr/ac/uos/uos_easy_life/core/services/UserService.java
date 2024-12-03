@@ -154,4 +154,22 @@ public class UserService {
         minimumTotalGradePointAverage,
         totalGradePointAverage);
   }
+
+  public List<Course> getRecommendedCourses(String userId) {
+    UserAcademicStatus academicStatus = academicStatusRepository.getAcademicStatus(userId);
+    if (academicStatus == null) {
+      throw new IllegalArgumentException("학적 정보가 존재하지 않습니다.");
+    }
+
+    List<Course> recommendedCourses = new ArrayList<>();
+    List<Course> allCourses = courseRepository.findAll();
+
+    // TODO: Implement here
+    // Select just 20 random courses for mocking
+    for (int i = 0; i < 20; i++) {
+      recommendedCourses.add(allCourses.get(i));
+    }
+
+    return recommendedCourses;
+  }
 }
