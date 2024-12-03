@@ -1,0 +1,20 @@
+#!/bin/bash
+cd `dirname $0`
+set -e
+
+# 1. download openapi file
+wget -O ./openapi.json http://localhost:8080/v3/api-docs 2>/dev/null
+
+# 2. remove existing api directory
+rm -rf ./src/api
+
+# 3. generate api client
+openapi --input ./openapi.json --output ./src/api
+
+# 4. Fix the generated code
+FILE='./src/api/core/CancelablePromise.ts'
+ORIGINAL='readonly \[Symbol.toStringTag\]: string;'
+REPLACE='readonly [Symbol.toStringTag]: string = "CancelablePromise";'
+sed -i "s/$ORIGINAL/$REPLACE/g" $FILE
+
+echo "API client generated successfully"
