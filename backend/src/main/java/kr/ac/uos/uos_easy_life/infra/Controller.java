@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.ac.uos.uos_easy_life.core.model.Course;
 import kr.ac.uos.uos_easy_life.core.model.User;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatusDTO;
 import kr.ac.uos.uos_easy_life.core.model.UserFullInfo;
@@ -72,6 +73,14 @@ public class Controller {
   public UserAcademicStatusDTO getUserAcademicStatus(@RequestParam String session) {
     String userId = authService.getUserIdBySession(session);
     return userService.getUserAcademicStatus(userId);
+  }
+
+  @GetMapping("/user/recommended-course")
+  public Course[] recommendCourse(@RequestParam String session) {
+    // TODO: Implement here
+    Course courses[] = new Course[1];
+    courses[0] = new Course("1", "test", "test", 3, 3);
+    return courses;
   }
 }
 
