@@ -155,21 +155,197 @@ public class UserService {
         totalGradePointAverage);
   }
 
+  /**
+   * 학년/학기별 전공필수과목 반환
+   * 
+   * @param grade
+   * @param semester
+   * @param majorCompletedCredit
+   * @return
+   */
+  private List<Course> getRecommendedMajorEssentialCourses(int grade, int semester, int majorCompletedCredit) {
+    List<Course> recommendedCourses = new ArrayList<>();
+
+    if (grade == 1 && semester == 2) {
+      recommendedCourses.add(courseRepository.findByName("창의공학기초설계"));
+      recommendedCourses.add(courseRepository.findByName("C언어및실습"));
+    } else if (grade == 2 && semester == 1) {
+      recommendedCourses.add(courseRepository.findByName("논리회로설계및실습"));
+      recommendedCourses.add(courseRepository.findByName("이산수학"));
+    } else if (grade == 2 && semester == 2) {
+      recommendedCourses.add(courseRepository.findByName("자료구조"));
+    } else if (grade == 3 && semester == 1) {
+      recommendedCourses.add(courseRepository.findByName("운영체제"));
+    } else if (grade == 3 && semester == 2) {
+      recommendedCourses.add(courseRepository.findByName("소프트웨어공학"));
+    } else if (grade == 4 && semester == 1) {
+      recommendedCourses.add(courseRepository.findByName("컴퓨터과학종합설계"));
+    } else if (grade == 4 && semester == 2 && majorCompletedCredit < 24) {
+      recommendedCourses.add(courseRepository.findByName("컴퓨터과학종합설계"));
+    }
+    return recommendedCourses;
+  }
+
+  /**
+   * 학년/학기별 공학소양선택과목 시수 반환
+   * 
+   * @param grade
+   * @param semester
+   * @param majorCompletedCredit
+   * @return
+   */
+  private static int getEngineeringCredits(int grade, int semester, int completedEngineering) {
+    if (grade == 1 && semester == 2) {
+      return 1;
+    }
+
+    if (grade == 2 && completedEngineering >= 2) {
+      return 2;
+    }
+
+    if (grade == 3 && completedEngineering < 4) {
+      return 2;
+    }
+
+    if (grade == 3 && completedEngineering >= 4) {
+      return 1;
+    }
+
+    if (grade == 4) {
+      return (int) Math.ceil((8 - completedEngineering) / 2);
+    }
+
+    return 0;
+  }
+
+  private static int random(int max) {
+    return (int) (Math.random() * (max + 1));
+  }
+
+  private static List<Course> sampleCourses(Course[] courses, int count) {
+    if (courses.length <= count) {
+      throw new IllegalArgumentException("과목 개수가 부족합니다.");
+    }
+
+    // 겹치지 않게 랜덤하게 count개의 과목을 추출
+    List<Course> result = new ArrayList<>();
+    for (int i = 0; i < count; i++) {
+      int index = random(courses.length - 1);
+      if (!result.contains(courses[index])) {
+        result.add(courses[index]);
+      } else {
+        i--;
+      }
+    }
+    return result;
+  }
+
+  private List<Course> getRecommendedLiberalElective(int grade, int semester) {
+    // 1학년 1학기에는 기초과학선택 중 적당히 두 개 추천
+    if (grade == 1 && semester == 1) {
+      Course[] courses = new Course[] {
+          courseRepository.findByName("일반화학및실험 I"),
+          courseRepository.findByName("일반물리및실험 I"),
+          courseRepository.findByName("일반생물및실험 I")
+      };
+      return sampleCourses(courses, 2);
+    }
+
+    // 1학년 2학기에는 기초선택과목 II 중 적당히 두 개 추천
+    // TODO: 1학년 1학기 때 들은 과목과 연계 필요
+    if (grade == 1 && semester == 2) {
+      Course[] courses = new Course[] {
+          courseRepository.findByName("일반화학및실험 II"),
+          courseRepository.findByName("일반물리및실험 II"),
+          courseRepository.findByName("일반생물및실험 II")
+      };
+      return sampleCourses(courses, 2);
+    }
+
+    // 아무 해당 없으면 빈 리스트 반환
+    return new ArrayList<>();
+  }
+
+  private static int getRecommendedMajorElectiveCredits(int grade) {
+    if (grade > 1) {
+      return 5;
+    } else {
+      return 0;
+    }
+  }
+
+  private static int getRecommendedLiberalElectiveCredits(int grade) {
+    if (grade == 1) {
+      return 0;
+    } else if (grade == 2) {
+      return 3;
+    } else if (grade == 3) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
+
   public List<Course> getRecommendedCourses(String userId) {
+    User user = userRepository.findById(userId);
     UserAcademicStatus academicStatus = academicStatusRepository.getAcademicStatus(userId);
     if (academicStatus == null) {
       throw new IllegalArgumentException("학적 정보가 존재하지 않습니다.");
     }
 
     List<Course> recommendedCourses = new ArrayList<>();
-    List<Course> allCourses = courseRepository.findAll();
 
-    // TODO: Implement here
-    // Select just 20 random courses for mocking
-    for (int i = 0; i < 20; i++) {
-      recommendedCourses.add(allCourses.get(i));
+    if (user.getCurrentGrade() == 1 && user.getCurrentSemester() == 1) {
+      recommendedCourses.add(courseRepository.findByName("UOS미래디자인"));
+      recommendedCourses.add(courseRepository.findByName("의사결정과토론"));
+      recommendedCourses.add(courseRepository.findByName("대학영어(W)"));
+      recommendedCourses.add(courseRepository.findByName("수학I"));
+      recommendedCourses.add(courseRepository.findByName("물리학및실험I"));
+      recommendedCourses.add(courseRepository.findByName("화학및실험I"));
+      recommendedCourses.add(courseRepository.findByName("생물학및실험I"));
+      recommendedCourses.add(courseRepository.findByName("컴퓨터과학개론"));
+      recommendedCourses.add(courseRepository.findByName("프로그래밍입문"));
+      recommendedCourses.removeIf(course -> course == null);
+      return recommendedCourses;
     }
 
+    if (user.getCurrentGrade() == 1 && user.getCurrentSemester() == 2) {
+      recommendedCourses.add(courseRepository.findByName("과학기술글쓰기"));
+      recommendedCourses.add(courseRepository.findByName("대학영어(S)"));
+      recommendedCourses.add(courseRepository.findByName("물리학및실험II"));
+      recommendedCourses.add(courseRepository.findByName("화학및실험II"));
+      recommendedCourses.add(courseRepository.findByName("생물학및실험II"));
+      recommendedCourses.add(courseRepository.findByName("수학II"));
+      recommendedCourses.add(courseRepository.findByName("창의공학기초설계"));
+      recommendedCourses.add(courseRepository.findByName("C언어및실습"));
+      recommendedCourses.add(courseRepository.findByName("공학도의창업과경영"));
+      recommendedCourses.removeIf(course -> course == null);
+      return recommendedCourses;
+    }
+
+    // 전필
+    recommendedCourses.addAll(getRecommendedMajorEssentialCourses(
+        user.getCurrentGrade(),
+        user.getCurrentSemester(),
+        academicStatus.getMajorCompletedCredit()));
+
+    // 교필
+    int liberalEssentialRequiredCredit;
+    if (user.getStudentId().startsWith("2023") ||
+        user.getStudentId().startsWith("2024")) {
+      liberalEssentialRequiredCredit = Math.max(0, 15 - academicStatus.getLiberalEssentialCompletedCredit());
+    } else {
+      liberalEssentialRequiredCredit = Math.max(0, 14 - academicStatus.getLiberalEssentialCompletedCredit());
+    }
+
+    // 공소
+    recommendedCourses.addAll(getRecommendedLiberalElective(user.getCurrentGrade(), user.getCurrentSemester()));
+
+    // 전선
+
+    // 교선
+
+    recommendedCourses.removeIf(course -> course == null);
     return recommendedCourses;
   }
 }
