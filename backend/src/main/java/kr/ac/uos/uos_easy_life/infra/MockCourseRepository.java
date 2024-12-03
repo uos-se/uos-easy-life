@@ -12,12 +12,31 @@ import org.springframework.stereotype.Repository;
 
 import kr.ac.uos.uos_easy_life.core.interfaces.CourseRepository;
 import kr.ac.uos.uos_easy_life.core.model.Course;
+import kr.ac.uos.uos_easy_life.core.model.Department;
 
 @Repository
 public class MockCourseRepository implements CourseRepository {
 
   // Course 리스트를 이용해 데이터를 저장
   private List<Course> courses = new ArrayList<>();
+
+  private static int parseGrade(String grade) {
+    // If string is int-parsable, return int value
+    try {
+      return Integer.parseInt(grade);
+    } catch (NumberFormatException e) {
+    }
+
+    // Split it by '/' and get the first element
+    String[] grades = grade.split("/");
+    try {
+      return Integer.parseInt(grades[0]);
+    } catch (NumberFormatException e) {
+    }
+
+    // If it's not parsable, return 1
+    return 1;
+  }
 
   public MockCourseRepository() throws IOException {
     InputStream inputStream = getClass().getClassLoader().getResourceAsStream("mock-course-data.json");
@@ -27,14 +46,34 @@ public class MockCourseRepository implements CourseRepository {
     for (int i = 0; i < courseList.length(); i++) {
       JSONObject courseJson = courseList.getJSONObject(i);
 
-      String id = "COURSE_" + (i + 1);
+      String id = "COURSE_" + (i + 1); // 몰?루
       String lectureName = courseJson.getString("SBJC_NM");
       String lectureCode = courseJson.getString("SBJC_NO");
       int lectureCredit = courseJson.getInt("CMPN_PNT");
-      int lectureGrade = 1; // FIXME: 학년 정보를 3/4따위로 문자열로 박아놓은 경우가 있어서 임시로 1로 설정
+      int lectureGrade = parseGrade(courseJson.getString("CMPN_GRADE"));
+      Department department = Department.fromDepartmentName(courseJson.getString("OGDP_SCSBJT_NM"));
+      boolean isMajorElective = courseJson.getString("COURSE_DIVCD_NM").equals("전공선택");
+      boolean isMajorEssential = courseJson.getString("COURSE_DIVCD_NM").equals("전공필수");
+      boolean isLiberalElective = courseJson.getString("COURSE_DIVCD_NM").equals("교양선택");
+      boolean isLiberalEssential = courseJson.getString("COURSE_DIVCD_NM").equals("교양필수");
+      boolean isEngineering = courseJson.getString("COURSE_DIVCD_NM2").equals("공학소양");
+      boolean isBasicAcademic = courseJson.getString("COURSE_DIVCD_NM2").equals("학문기초");
+      int designCredit = courseJson.getInt("DESIGN_PNT");
 
-      Course course = new Course(id, lectureName, lectureCode, lectureCredit,
-          lectureGrade);
+      Course course = new Course(
+          id,
+          lectureName,
+          lectureCode,
+          lectureCredit,
+          lectureGrade,
+          department,
+          isMajorElective,
+          isMajorEssential,
+          isLiberalElective,
+          isLiberalEssential,
+          isEngineering,
+          isBasicAcademic,
+          designCredit);
 
       courses.add(course);
     }

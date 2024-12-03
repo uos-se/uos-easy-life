@@ -24,7 +24,16 @@ public enum Department {
         return department;
       }
     }
-    throw new IllegalArgumentException("해당하는 학과 코드가 없습니다.");
+    return null;
+  }
+
+  public static Department fromDepartmentName(String departmentName) {
+    for (Department department : Department.values()) {
+      if (department.getDepartmentName().equals(departmentName)) {
+        return department;
+      }
+    }
+    return null;
   }
 
   public int getDepartmentCode() {
