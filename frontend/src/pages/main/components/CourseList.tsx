@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCourseStore } from "@/store/courseStore";
+import { useUserStore } from "@/store/userStore";
 
 export function CourseList() {
-  const { recommendedCourses } = useCourseStore();
+  const { recommendedCourses } = useUserStore();
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg md:col-span-2">
@@ -14,8 +14,7 @@ export function CourseList() {
           recommendedCourses.map((course) => (
             <div
               key={course.id}
-              className="bg-white p-4 rounded-md shadow-sm border border-gray-100 cursor-pointer"
-            >
+              className="bg-white p-4 rounded-md shadow-sm border border-gray-100 cursor-pointer">
               <h3 className="font-semibold text-base text-indigo-700 mb-2">
                 {course.lectureName}({course.lectureCode})
               </h3>
@@ -28,16 +27,16 @@ export function CourseList() {
                   <span className="mr-1 text-purple-500">공학소양학점:</span>{" "}
                   {course.lectureCredit}
                 </span>
-                {/* {course.isMajor && (
+                {(course.majorElective || course.majorEssential) && (
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                     <span className="mr-1 text-yellow-500">전공</span>
                   </span>
                 )}
-                {course.isMajorEssential && (
+                {course.majorEssential && (
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
                     <span className="mr-1 text-red-500">전공 필수 과목</span>
                   </span>
-                )} */}
+                )}
               </div>
             </div>
           ))

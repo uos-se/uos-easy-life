@@ -1,4 +1,4 @@
-import { UserAcademicStatusDTO, UserFullInfo } from "@/api";
+import { Course, UserAcademicStatusDTO, UserFullInfo } from "@/api";
 import { ControllerService } from "@/api/services/ControllerService";
 import { create } from "zustand";
 
@@ -13,6 +13,7 @@ export interface SessionStore {
   session: Session | null;
   userInfo: UserFullInfo | null;
   academicStatus: UserAcademicStatusDTO | null;
+  recommendedCourses: Course[];
   login: (id: string, password: string) => Promise<boolean>;
   logout: () => void;
   initialize: () => Promise<void>;
@@ -27,6 +28,7 @@ export const useUserStore = create<SessionStore>((set) => ({
   session: null,
   userInfo: null,
   academicStatus: null,
+  recommendedCourses: [],
 
   initialize: async () => {
     try {
@@ -111,15 +113,20 @@ export const useUserStore = create<SessionStore>((set) => ({
     const academicStatusPromise = ControllerService.getUserAcademicStatus(
       session.key
     );
+    const recommendedCoursesPromise = ControllerService.recommendCourse(
+      session.key
+    );
 
-    const [userInfo, academicStatus] = await Promise.all([
+    const [userInfo, academicStatus, recommendedCourses] = await Promise.all([
       userInfoPromise,
       academicStatusPromise,
+      recommendedCoursesPromise,
     ]);
 
     set({
       userInfo,
       academicStatus,
+      recommendedCourses,
     });
   },
 
@@ -133,6 +140,8 @@ export const useUserStore = create<SessionStore>((set) => ({
         session.portalId,
         session.portalPassword
       );
+
+      await useUserStore.getState().load();
     } catch (error) {
       console.error("Sync failed:", error);
     }
