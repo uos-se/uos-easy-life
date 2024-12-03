@@ -6,23 +6,39 @@ ROOT=`pwd`
 cleanup() {
   echo -e "\rCleaning up..."
   pkill -P $$ || true
+  docker stop $DB_CONTAINER_ID 2>&1 > /dev/null || true
   echo "Done."
   exit 0
 }
 
 trap cleanup SIGINT SIGTERM
 
+# Start the database container
+echo "Starting database..."
+DB_CONTAINER_ID=`docker run --rm -d -p 27017:27017 mongo`
+echo "Database started."
+
 # Build the backend
-build
+echo "Building backend..."
+build 2>&1 > /dev/null
+echo "Backend built."
 
 # Start the backend
 cd $ROOT/backend
-java -jar build/libs/*-SNAPSHOT.jar&
+java -jar build/libs/*-SNAPSHOT.jar 2>&1 > $ROOT/scripts/backend.log&
+echo "Backend started."
+
+# Install frontend dependencies
+cd $ROOT/frontend
+echo "Installing frontend dependencies..."
+yarn install 2>&1 > /dev/null
+echo "Frontend dependencies installed."
 
 # Start the frontend
-cd $ROOT/frontend
-yarn install
-yarn dev&
+yarn dev 2>&1 > $ROOT/scripts/frontend.log&
+echo "Frontend started."
+
+tail -f $ROOT/scripts/backend.log $ROOT/scripts/frontend.log &
 
 # Sleep forever
 while true; do
