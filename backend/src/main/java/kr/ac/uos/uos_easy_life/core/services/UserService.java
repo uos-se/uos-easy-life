@@ -55,7 +55,8 @@ public class UserService {
     }
 
     return new UserFullInfo(user.getName(), user.getStudentId(), "", "",
-        user.getDepartment().getDepartmentName(), user.getCurrentGrade(), "", courses);
+        user.getDepartment().getDepartmentName(), user.getCurrentGrade(), "", courses,
+        user.getUpdatedAt());
   }
 
   public void syncUser(String userId, String portalId, String portalPassword) {

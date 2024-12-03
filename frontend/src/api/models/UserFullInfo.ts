@@ -13,4 +13,5 @@ export type UserFullInfo = {
     grade?: number;
     status?: string;
     courses?: Array<Course>;
+    updatedAt?: number;
 }
