@@ -93,6 +93,7 @@ public class UosApiImpl implements UosApi {
 
       return courseCodes;
     } catch (IOException | InterruptedException | JSONException e) {
+      System.out.println(e);
       return null;
     }
   }
