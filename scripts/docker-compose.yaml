@@ -10,6 +10,7 @@ services:
   backend:
     build: 
       context: ../backend
+      dockerfile: Dockerfile.dev
     image: backend
     container_name: backend
     ports:
