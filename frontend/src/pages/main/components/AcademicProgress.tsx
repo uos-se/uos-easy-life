@@ -81,7 +81,7 @@ export function AcademicProgress() {
   ];
 
   return totalCompletedCredit !== undefined ? (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-6 rounded-lg shadow-lg h-[450px]">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
         내 학점 한 눈에 보기
       </h2>
@@ -89,16 +89,17 @@ export function AcademicProgress() {
         {barData.map((item, index) => (
           <div
             key={index}
-            className="flex items-center mb-2 text-sm hover:bg-gray-100 p-0.5 hover:cursor-pointer transition duration-200"
+            className="flex items-center mb-2 text-sm hover:bg-gray-100 p-0.5 hover:cursor-pointer transition duration-200 py-1"
             onClick={() => {
-              console.log(index);
               // fetchRecommendedCourses()
-            }}>
+            }}
+          >
             <div className="w-1/4 text-right pr-2">{item.name}</div>
             <div className="relative w-7/12 bg-gray-200 rounded">
               <div
                 className="top-0 left-0 h-6 bg-muted-foreground rounded"
-                style={{ width: `${item.value}%` }}></div>
+                style={{ width: `${item.value}%` }}
+              ></div>
             </div>
             <div className="ml-2">
               <strong>{item.completed}</strong>/{item.required}
@@ -112,7 +113,8 @@ export function AcademicProgress() {
             totalGradePointAverage! < minimumTotalGradePointAverage!
               ? "bg-red-100"
               : "bg-blue-100"
-          }`}>
+          }`}
+        >
           평균 평점: <strong>{totalGradePointAverage}</strong>
         </span>
         <span className="ml-2 text-xs text-muted-foreground">
@@ -123,7 +125,7 @@ export function AcademicProgress() {
       </div>
     </div>
   ) : (
-    <div className="h-[350px] p-6 rounded-lg shadow-lg bg-white flex justify-center items-center">
+    <div className="h-[450px] p-6 rounded-lg shadow-lg bg-white flex justify-center items-center">
       <Skeleton className="w-[300px] h-[300px] rounded-lg" />
     </div>
   );
