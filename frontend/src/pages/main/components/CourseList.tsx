@@ -14,7 +14,8 @@ export function CourseList() {
           recommendedCourses.map((course) => (
             <div
               key={course.id}
-              className="bg-white p-4 rounded-md shadow-sm border border-gray-100 cursor-pointer">
+              className="bg-white p-4 rounded-md shadow-sm border border-gray-100 cursor-pointer"
+            >
               <h3 className="font-semibold text-base text-indigo-700 mb-2">
                 {course.lectureName}({course.lectureCode})
               </h3>
