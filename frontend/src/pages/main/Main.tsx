@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcademicProgress } from "./components/AcademicProgress";
 import { CourseList } from "./components/CourseList";
+import { Scheduler } from "./components/Scheduler";
 
 function formatTimestamp(timestamp: number | null | undefined): string {
   if (!timestamp) return "Never";
@@ -70,17 +71,11 @@ export function Main() {
             </div>
           </div>
         </section>
-        <DragDropContext
-          onDragEnd={(a, b) => {
-            console.log(a, b);
-          }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <AcademicProgress />
-            <CourseList />
-          </div>
-          <Scheduler />
-        </DragDropContext>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <AcademicProgress />
+          <CourseList />
+        </div>
+        <Scheduler />
       </main>
     </div>
   );
