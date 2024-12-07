@@ -13,7 +13,7 @@ public class MongoConnection {
   private final MongoDatabase database;
 
   public MongoConnection() {
-    String connectionString = "mongodb://localhost:27017/uos-easy-life";
+    String connectionString = "mongodb://mongodb:27017/uos-easy-life";
     String databaseName = "uos-easy-life";
 
     MongoClient mongoClient = MongoClients.create(connectionString);
