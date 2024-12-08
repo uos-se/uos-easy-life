@@ -35,12 +35,16 @@ export function AcademicProgress() {
       value: calc(totalCompletedCredit!, totalRequiredCredit!),
       completed: totalCompletedCredit,
       required: totalRequiredCredit,
+      color: "bg-green-100",
+      boldColor: "bg-green-500",
     },
     {
       name: "전공",
       value: calc(majorCompletedCredit!, majorRequiredCredit!),
       completed: majorCompletedCredit,
       required: majorRequiredCredit,
+      color: "bg-yellow-100",
+      boldColor: "bg-yellow-500",
     },
     {
       name: "전공 필수",
@@ -50,12 +54,16 @@ export function AcademicProgress() {
       ),
       completed: majorEssentialCompletedCredit,
       required: majorEssentialRequiredCredit,
+      color: "bg-red-100",
+      boldColor: "bg-red-500",
     },
     {
       name: "교양",
       value: calc(liberalCompletedCredit!, liberalRequiredCredit!),
       completed: liberalCompletedCredit,
       required: liberalRequiredCredit,
+      color: "bg-cyan-100",
+      boldColor: "bg-cyan-500",
     },
     {
       name: "교양 필수",
@@ -65,18 +73,24 @@ export function AcademicProgress() {
       ),
       completed: liberalEssentialCompletedCredit,
       required: liberalEssentialRequiredCredit,
+      color: "bg-lime-100",
+      boldColor: "bg-lime-500",
     },
     {
       name: "공학 소양",
       value: calc(engineeringCompletedCredit!, engineeringRequiredCredit!),
       completed: engineeringCompletedCredit,
       required: engineeringRequiredCredit,
+      color: "bg-amber-100",
+      boldColor: "bg-amber-500",
     },
     {
       name: "일반",
       value: calc(generalCompletedCredit!, generalRequiredCredit!),
       completed: generalCompletedCredit,
       required: generalRequiredCredit,
+      color: "bg-gray-100",
+      boldColor: "bg-gray-500",
     },
   ];
 
@@ -89,15 +103,12 @@ export function AcademicProgress() {
         {barData.map((item, index) => (
           <div
             key={index}
-            className="flex items-center mb-2 text-sm hover:bg-gray-100 p-0.5 hover:cursor-pointer transition duration-200 py-1"
-            onClick={() => {
-              // fetchRecommendedCourses()
-            }}
+            className="flex items-center mb-2 text-sm p-0.5 py-1"
           >
             <div className="w-1/4 text-right pr-2">{item.name}</div>
-            <div className="relative w-7/12 bg-gray-200 rounded">
+            <div className={`relative w-7/12 ${item.color} rounded`}>
               <div
-                className="top-0 left-0 h-6 bg-muted-foreground rounded"
+                className={`top-0 left-0 h-6 rounded ${item.boldColor}`}
                 style={{ width: `${item.value}%` }}
               ></div>
             </div>

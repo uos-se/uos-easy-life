@@ -52,9 +52,6 @@ export function Scheduler() {
         >
           {courses !== undefined && (
             <>
-              <h3 className="font-semibold text-center pb-2 border-b">
-                Available Courses
-              </h3>
               {courses.map((course, index) => (
                 <SchedulerCard
                   key={course.id}
