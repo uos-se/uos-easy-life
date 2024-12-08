@@ -69,7 +69,12 @@ public enum Department {
   Music(64, "음악학과"),
   AdvancedArtificialIntelligence(65, "첨단인공지능전공"),
   LiberalArts(66, "자유전공학부"),
-  EnglishLanguageAndLiterature(67, "영어영문학과");
+  EnglishLanguageAndLiterature(67, "영어영문학과"),
+  WritingClass(68, "글쓰기교실"),
+  WritingCenter(69, "글쓰기센터"),
+  UrbanScienceCollege(70, "도시과학대학"),
+  UrbanPlanning(71, "도시계획학전공"),
+  EastAsianCultureInterdisciplinary(72, "동아시아문화연계전공");
 
   private final int departmentCode;
   private final String departmentName;
