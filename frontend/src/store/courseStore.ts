@@ -8,7 +8,7 @@ export interface CourseStore {
 
 export const useCourseStore = create<CourseStore>((set) => ({
   recommendedCourses: [],
-  fetchRecommendedCourses: async (criteria: string) => {
+  fetchRecommendedCourses: async () => {
     set({ recommendedCourses: [] });
   },
 }));
