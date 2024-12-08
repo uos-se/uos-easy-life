@@ -4,16 +4,18 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.ac.uos.uos_easy_life.core.model.Course;
+import kr.ac.uos.uos_easy_life.core.model.CoursePlan;
 import kr.ac.uos.uos_easy_life.core.model.User;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatusDTO;
 import kr.ac.uos.uos_easy_life.core.model.UserFullInfo;
 import kr.ac.uos.uos_easy_life.core.services.AuthService;
+import kr.ac.uos.uos_easy_life.core.services.CoursePlanService;
 import kr.ac.uos.uos_easy_life.core.services.UserService;
 
 @RestController
@@ -22,10 +24,12 @@ public class Controller {
 
   private final AuthService authService;
   private final UserService userService;
+  private final CoursePlanService coursePlanService;
 
-  public Controller(AuthService authService, UserService userService) {
+  public Controller(AuthService authService, UserService userService, CoursePlanService coursePlanService) {
     this.authService = authService;
     this.userService = userService;
+    this.coursePlanService = coursePlanService;
   }
 
   @GetMapping("/")
@@ -81,6 +85,18 @@ public class Controller {
   public List<Course> recommendCourse(@RequestParam String session) {
     String userId = authService.getUserIdBySession(session);
     return userService.getRecommendedCourses(userId);
+  }
+
+  @PostMapping("/user/course-plan")
+  public void setCoursePlan(@RequestParam String session, @RequestBody List<CoursePlan> coursePlan) {
+    String userId = authService.getUserIdBySession(session);
+    coursePlanService.setCoursePlan(userId, coursePlan);
+  }
+
+  @GetMapping("/user/course-plan")
+  public List<CoursePlan> getCoursePlan(@RequestParam String session) {
+    String userId = authService.getUserIdBySession(session);
+    return coursePlanService.getCoursePlan(userId);
   }
 }
 
