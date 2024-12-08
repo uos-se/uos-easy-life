@@ -22,23 +22,33 @@ async function getCourseId(course) {
 }
 
 async function main() {
-  const uniqueCourseIDs = new Set();
+  const uniqueCourseIDs = new Map();
   const list = [];
   const files = await fs.readdir("./data");
   for (const file of files) {
     if (file.endsWith(".json")) {
+      const year = file.split("-")[0];
       const data = await fs.readFile("./data/" + file, "utf-8");
       for (const item of JSON.parse(data)["dsMain"]) {
         const id = await getCourseId(item);
         item["_id"] = id;
+        item["LAST_OPEN_YEAR"] = year;
         if (uniqueCourseIDs.has(id)) {
+          const existingItem = uniqueCourseIDs.get(id);
+          // 마지막으로 개설된 연도가 더 최근인 경우에만 업데이트
+          if (existingItem["LAST_OPEN_YEAR"] < year) {
+            uniqueCourseIDs.set(id, item);
+          }
           continue;
         }
-        list.push(item);
-        uniqueCourseIDs.add(id);
+        uniqueCourseIDs.set(id, item);
       }
     }
   }
+  for (const [, value] of uniqueCourseIDs) {
+    list.push(value);
+  }
+
   console.log(`Merged ${list.length} courses`);
   await fs.writeFile("merged.json", JSON.stringify(list, null, 2));
 }
