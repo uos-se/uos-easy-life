@@ -1,126 +1,94 @@
+import { ControllerService, CoursePlan } from "@/api";
 import { Course } from "@/api/models/Course";
+import { v4 as uuidv4 } from "uuid";
 import { create } from "zustand";
-
-interface Semester {
-  id: string;
-  courses: Course[];
-}
+import { getSession } from "./userStore";
 
 interface SemesterStore {
-  semesters: Semester[];
-  courses: Course[];
+  semesters?: CoursePlan[];
+  courses?: Course[];
+  fetch: () => Promise<void>;
   addCourseToSemester: (semesterId: string, course: Course) => void;
   removeCourseFromSemester: (semesterId: string, courseId: string) => void;
+  addSemesters: (semesterNumber: number) => void;
+  removeSemesters: () => void;
+  saveSemesters: () => Promise<void>;
   isInUse: (course: Course) => boolean;
 }
 
-const dummyCourses: Course[] = [
-  {
-    id: "1",
-    lectureName: "프로그래밍 기초",
-    lectureCode: "CS101",
-    lectureCredit: 3,
-    lectureGrade: 1,
-  },
-  {
-    id: "2",
-    lectureName: "자료구조",
-    lectureCode: "CS102",
-    lectureCredit: 3,
-    lectureGrade: 2,
-  },
-  {
-    id: "3",
-    lectureName: "알고리즘",
-    lectureCode: "CS201",
-    lectureCredit: 3,
-    lectureGrade: 2,
-  },
-  {
-    id: "4",
-    lectureName: "운영체제",
-    lectureCode: "CS202",
-    lectureCredit: 3,
-    lectureGrade: 3,
-  },
-  {
-    id: "5",
-    lectureName: "데이터베이스",
-    lectureCode: "CS301",
-    lectureCredit: 3,
-    lectureGrade: 3,
-  },
-  {
-    id: "6",
-    lectureName: "자료구조",
-    lectureCode: "CS102",
-    lectureCredit: 3,
-    lectureGrade: 2,
-  },
-  {
-    id: "7",
-    lectureName: "알고리즘",
-    lectureCode: "CS201",
-    lectureCredit: 3,
-    lectureGrade: 2,
-  },
-  {
-    id: "8",
-    lectureName: "운영체제",
-    lectureCode: "CS202",
-    lectureCredit: 3,
-    lectureGrade: 3,
-  },
-  {
-    id: "9",
-    lectureName: "데이터베이스",
-    lectureCode: "CS301",
-    lectureCredit: 3,
-    lectureGrade: 3,
-  },
-];
-
 export const useSemesterStore = create<SemesterStore>((set, get) => ({
-  semesters: [
-    { id: "1", courses: [] },
-    { id: "2", courses: [] },
-    { id: "3", courses: [] },
-  ],
-  courses: dummyCourses,
-  fetch: () => {
-    set(() => ({
-      courses: [...dummyCourses],
-    }));
+  fetch: async () => {
+    const session = getSession();
+    const coursesPromise = ControllerService.recommendCourse(session!.key);
+    const semesterPromise = ControllerService.getCoursePlan(session!.key);
+    const [courses, semesters] = await Promise.all([
+      coursesPromise,
+      semesterPromise,
+    ]);
+    set({
+      courses: [...courses],
+      semesters: [...(semesters ?? [])],
+    });
   },
   addCourseToSemester: (semesterId, course) =>
     set((state) => ({
-      semesters: state.semesters.map((semester) =>
+      semesters: state.semesters!.map((semester) =>
         semester.id === semesterId
-          ? { ...semester, courses: [...semester.courses, course] }
+          ? { ...semester, courses: [...semester!.courses!, course] }
           : semester
       ),
     })),
   removeCourseFromSemester: (semesterId, courseId) =>
     set((state) => ({
-      semesters: state.semesters.map((semester) =>
+      semesters: state!.semesters!.map((semester) =>
         semester.id === semesterId
           ? {
               ...semester,
-              courses: semester.courses.filter(
+              courses: semester!.courses!.filter(
                 (course) => course.id !== courseId
               ),
             }
           : semester
       ),
     })),
+  saveSemesters: async () => {
+    const session = getSession();
+    const state = get();
+
+    await ControllerService.setCoursePlan(session!.key, state.semesters!);
+  },
   isInUse: (course) => {
     const state = get();
-    const isInUse = state.semesters
-      .map((semester) => {
-        const index = semester.courses.find((c) => c.id == course.id);
+    const isInUse = state!
+      .semesters!.map((semester) => {
+        const index = semester!.courses!.find((c) => c.id == course.id);
         return index !== undefined;
       })
       .reduce((prev, curr) => prev || curr, false);
     return isInUse;
+  },
+  addSemesters: (semesterNumber: number) => {
+    const id = uuidv4();
+    const newSemester: CoursePlan = {
+      id,
+      semesterNumber: semesterNumber,
+      courses: [],
+    };
+    set((state) => {
+      return {
+        semesters: [...state.semesters!, newSemester],
+      };
+    });
+  },
+  removeSemesters: () => {
+    set((state) => {
+      const newSemesters = state.semesters!.slice(
+        0,
+        state.semesters!.length - 1
+      );
+      return {
+        semesters: [...newSemesters],
+      };
+    });
   },
 }));

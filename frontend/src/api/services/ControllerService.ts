@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Course } from '../models/Course';
+import type { CoursePlan } from '../models/CoursePlan';
 import type { LoginDTO } from '../models/LoginDTO';
 import type { User } from '../models/User';
 import type { UserAcademicStatusDTO } from '../models/UserAcademicStatusDTO';
@@ -10,6 +11,44 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 
 export class ControllerService {
+
+    /**
+     * @param session
+     * @returns CoursePlan OK
+     * @throws ApiError
+     */
+    public static getCoursePlan(
+        session: string,
+    ): CancelablePromise<Array<CoursePlan>> {
+        return __request({
+            method: 'GET',
+            path: `/api/user/course-plan`,
+            query: {
+                'session': session,
+            },
+        });
+    }
+
+    /**
+     * @param session
+     * @param requestBody
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static setCoursePlan(
+        session: string,
+        requestBody: Array<CoursePlan>,
+    ): CancelablePromise<any> {
+        return __request({
+            method: 'POST',
+            path: `/api/user/course-plan`,
+            query: {
+                'session': session,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
 
     /**
      * @param requestBody

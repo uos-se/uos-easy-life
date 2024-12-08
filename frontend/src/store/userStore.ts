@@ -123,6 +123,8 @@ export const useUserStore = create<SessionStore>((set) => ({
       recommendedCoursesPromise,
     ]);
 
+    console.log(userInfo);
+
     set({
       userInfo,
       academicStatus,
@@ -147,3 +149,5 @@ export const useUserStore = create<SessionStore>((set) => ({
     }
   },
 }));
+
+export const getSession = () => useUserStore.getState().session;
