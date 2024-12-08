@@ -67,7 +67,7 @@ public class User {
 
     // 학번은 10자리 숫자로만 이루어져야 한다.
     if (!studentId.matches("[0-9]{10}")) {
-      throw new IllegalArgumentException("학번은 10자리 숫자로만 이루어져야 합니다.");
+      throw new IllegalArgumentException("학번은 10자리 숫자로만 이루어져야 합니다. 값: " + studentId);
     }
     this.studentId = studentId;
 
@@ -117,7 +117,7 @@ public class User {
 
   public void setCurrentGrade(int currentGrade) {
     if (currentGrade < 1 || currentGrade > 5) {
-      throw new IllegalArgumentException("학년은 1~5 사이의 값만 허용됩니다.");
+      throw new IllegalArgumentException("학년은 1~5 사이의 값만 허용됩니다. 값: " + currentGrade);
     }
     this.currentGrade = currentGrade;
     this.updateTimestamp();
@@ -129,7 +129,7 @@ public class User {
 
   public void setCurrentSemester(int currentSemester) {
     if (currentSemester != 1 && currentSemester != 2) {
-      throw new IllegalArgumentException("학기는 1, 2만 허용됩니다.");
+      throw new IllegalArgumentException("학기는 1, 2만 허용됩니다. 값: " + currentSemester);
     }
     this.currentSemester = currentSemester;
     this.updateTimestamp();
