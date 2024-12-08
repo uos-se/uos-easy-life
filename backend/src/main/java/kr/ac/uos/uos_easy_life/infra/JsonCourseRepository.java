@@ -80,40 +80,52 @@ public class JsonCourseRepository implements CourseRepository {
 
   @Override
   public Course findById(String id) {
-    // 주어진 ID에 해당하는 코스를 찾아 반환
+    // 주어진 ID에 해당하는 강의를 찾아 반환
     Optional<Course> course = courses.stream().filter(c -> c.getId().equals(id)).findFirst();
     return course.orElse(null); // 없으면 null 반환
   }
 
   @Override
   public Course findByCode(String code) {
-    // 주어진 코드에 해당하는 코스를 찾아 반환
+    // 주어진 코드에 해당하는 강의를 찾아 반환
     Optional<Course> course = courses.stream().filter(c -> c.getLectureCode().equals(code)).findFirst();
     return course.orElse(null); // 없으면 null 반환
   }
 
   @Override
   public Course findByName(String name) {
-    // 주어진 이름에 해당하는 코스를 찾아 반환
+    // 주어진 이름에 해당하는 강의를 찾아 반환
     Optional<Course> course = courses.stream().filter(c -> c.getLectureName().equals(name)).findFirst();
     return course.orElse(null); // 없으면 null 반환
   }
 
   @Override
+  public List<Course> findByDepartment(Department department) {
+    // 주어진 학과에 해당하는 강의를 찾아 반환
+    List<Course> departmentCourses = new ArrayList<>();
+    for (Course course : courses) {
+      if (course.getDepartment() == department) {
+        departmentCourses.add(course);
+      }
+    }
+    return departmentCourses;
+  }
+
+  @Override
   public List<Course> findAll() {
-    // 저장된 모든 코스를 반환
+    // 저장된 모든 강의를 반환
     return new ArrayList<>(courses);
   }
 
   @Override
   public void save(Course course) {
-    // 새로운 코스를 리스트에 추가
+    // 새로운 강의를 리스트에 추가
     courses.add(course);
   }
 
   @Override
   public void update(Course course) {
-    // 주어진 코스의 ID에 해당하는 코스를 찾아 업데이트
+    // 주어진 코스의 ID에 해당하는 강의를 찾아 업데이트
     for (int i = 0; i < courses.size(); i++) {
       if (courses.get(i).getId().equals(course.getId())) {
         courses.set(i, course);
@@ -124,7 +136,7 @@ public class JsonCourseRepository implements CourseRepository {
 
   @Override
   public void deleteById(String id) {
-    // 주어진 ID에 해당하는 코스를 리스트에서 삭제
+    // 주어진 ID에 해당하는 강의를 리스트에서 삭제
     courses.removeIf(course -> course.getId().equals(id));
   }
 }

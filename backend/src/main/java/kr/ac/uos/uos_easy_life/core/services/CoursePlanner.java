@@ -1,11 +1,14 @@
 package kr.ac.uos.uos_easy_life.core.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import kr.ac.uos.uos_easy_life.core.interfaces.CourseRepository;
 import kr.ac.uos.uos_easy_life.core.interfaces.RegistrationRepository;
 import kr.ac.uos.uos_easy_life.core.model.Course;
+import kr.ac.uos.uos_easy_life.core.model.Department;
 import kr.ac.uos.uos_easy_life.core.model.User;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 
@@ -18,9 +21,21 @@ public class CoursePlanner {
         this.registrationRepository = registrationRepository;
     }
 
-    private void filterCourses(User user, List<Course> courses) {
+    private List<Course> filterCourses(User user, List<Course> courses) {
+        List<Course> filteredCourses = new ArrayList<>();
+        Set<String> filteredCourseIds = new HashSet<>();
         List<String> registeredCourseIds = registrationRepository.findRegisteredCourses(user.getId());
-        courses.removeIf(course -> registeredCourseIds.contains(course.getId()));
+        for (Course course : courses) {
+            if (registeredCourseIds.contains(course.getId())) {
+                continue;
+            }
+            if (filteredCourseIds.contains(course.getId())) {
+                continue;
+            }
+            filteredCourses.add(course);
+            filteredCourseIds.add(course.getId());
+        }
+        return filteredCourses;
     }
 
     /**
@@ -127,7 +142,12 @@ public class CoursePlanner {
                 user.getCurrentGrade(),
                 user.getCurrentSemester()));
 
-        filterCourses(user, courses);
+        // 아몰랑 컴퓨터과학부 수업 전부 추가~~
+        Department cs = Department.fromDepartmentCode(92);
+        courses.addAll(courseRepository.findByDepartment(cs));
+
+        // 필터링 (중복 제거, 이미 수강한 과목 제거)
+        courses = filterCourses(user, courses);
 
         return courses;
     }
