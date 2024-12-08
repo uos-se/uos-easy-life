@@ -61,6 +61,7 @@ public class MongoUserRepository implements UserRepository {
         document.getString("portal_id"),
         document.getString("hashed_portal_password"),
         document.getString("salt"));
+    user.setUpdatedAt(document.getLong("updated_at"));
     return user;
   }
 
@@ -73,7 +74,8 @@ public class MongoUserRepository implements UserRepository {
         .append("current_semester", user.getCurrentSemester())
         .append("portal_id", user.getPortalId())
         .append("hashed_portal_password", user.getHashedPortalPassword())
-        .append("salt", user.getSalt());
+        .append("salt", user.getSalt())
+        .append("updated_at", user.getUpdatedAt());
 
     return document;
   }
