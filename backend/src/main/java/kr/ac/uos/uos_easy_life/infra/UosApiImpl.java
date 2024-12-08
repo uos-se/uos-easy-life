@@ -17,8 +17,10 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
+import kr.ac.uos.uos_easy_life.core.model.Department;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
+import kr.ac.uos.uos_easy_life.core.model.UserInfo;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 
 @Component
@@ -53,7 +55,7 @@ public class UosApiImpl implements UosApi {
   }
 
   @Override
-  public UserBasicInfo getUserInfo(UosSession session) {
+  public UserBasicInfo getUserBasicInfo(UosSession session) {
     String path = "/Main/onLoad.do";
     String body = "default.locale=CCMN101.KOR";
 
@@ -247,5 +249,40 @@ public class UosApiImpl implements UosApi {
 
     }
     return false;
+  }
+
+  @Override
+  public UserInfo getUserInfo(UosSession session, String studentId) {
+    String path = "/SCH/SusrMasterMgt/studentInfo.do";
+    String body = "_AUTH_MENU_KEY=SusrMasterInq_2"
+        + "&_AUTH_PGM_ID=SusrMasterInq"
+        + "&__PRVC_PSBLTY_YN=N"
+        + "&_AUTH_TASK_AUTHRT_ID=CCMN_SVC"
+        + "&default.locale=CCMN101.KOR"
+        + "&%40d1%23strStdntNo=" + studentId
+        + "&%40d%23=%40d1%23"
+        + "&%40d1%23=dmReqkey"
+        + "&%40d1%23tp=dm";
+    try {
+      String response = wiseRequest(path, body, session);
+      JSONObject obj = new JSONObject(response);
+      JSONObject studentInfo = obj.getJSONArray("dsStudentInfo").getJSONObject(0);
+
+      String departmentName = studentInfo.getString("SPRVSN_SCSBJT_NM");
+      Department department = Department.fromDepartmentName(departmentName);
+
+      // 이 값은 전체 학기 (e.g. 2학년 2학기 = 4)를 나타낸다. 일단 쓰지 않는다.
+      // int semester = studentInfo.getInt("PRMOT_SEMSTR_CNT");
+
+      // 만약 현재 시간이 8월 이전이면 1학기, 8월 이후면 2학기
+      int month = LocalDate.now().getMonthValue();
+      int semester = month < 8 ? 1 : 2;
+
+      int grade = studentInfo.getInt("STDNT_GRADE");
+
+      return new UserInfo(department, grade, semester);
+    } catch (IOException | InterruptedException e) {
+      return null;
+    }
   }
 }

@@ -57,7 +57,7 @@ public class AuthService {
       // 만약 로그인 정보가 올바르다면 사용자를 생성하고 세션을 저장한 후 세션 키를 반환한다.
       if (uosSession != null) {
         // 포털에서 사용자 생성에 필요한 정보를 가져온다.
-        UserBasicInfo userInfo = uosPortalApi.getUserInfo(uosSession);
+        UserBasicInfo userInfo = uosPortalApi.getUserBasicInfo(uosSession);
         String id = UUID.randomUUID().toString();
 
         // 새로운 사용자를 생성한다.

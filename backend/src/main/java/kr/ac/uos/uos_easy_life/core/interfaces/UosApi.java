@@ -5,10 +5,14 @@ import java.util.List;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
+import kr.ac.uos.uos_easy_life.core.model.UserInfo;
 
 public interface UosApi {
   // 세션을 통해 유저의 기본 정보를 반환 (이를 통해 학번을 획득)
-  public UserBasicInfo getUserInfo(UosSession session);
+  public UserBasicInfo getUserBasicInfo(UosSession session);
+
+  // 유저의 학과, 학년, 학기 정보를 반환
+  public UserInfo getUserInfo(UosSession session, String studentId);
 
   // 현재 유저가 수강했고 수강 중인 모든 과목 코드를 반환
   public List<String> getUserCourseCodes(UosSession session, String studentId);
