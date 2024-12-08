@@ -1,4 +1,4 @@
-package kr.ac.uos.uos_easy_life.infra;
+package kr.ac.uos.uos_easy_life.infra.mock;
 
 import org.springframework.stereotype.Repository;
 import kr.ac.uos.uos_easy_life.core.interfaces.UserRepository;

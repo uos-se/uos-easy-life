@@ -1,5 +1,5 @@
 
-package kr.ac.uos.uos_easy_life.infra;
+package kr.ac.uos.uos_easy_life.infra.mock;
 
 import java.util.HashMap;
 import java.util.Map;
