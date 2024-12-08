@@ -11,15 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import kr.ac.uos.uos_easy_life.core.interfaces.UosApi;
-import kr.ac.uos.uos_easy_life.core.model.Department;
 import kr.ac.uos.uos_easy_life.core.model.UosSession;
+import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
 import kr.ac.uos.uos_easy_life.core.model.UserInfo;
-import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 
 @Component
 public class UosApiImpl implements UosApi {
