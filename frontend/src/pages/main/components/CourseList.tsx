@@ -34,22 +34,34 @@ export function CourseList() {
                         <span className="mr-1 text-green-500">학점:</span>{" "}
                         {course.lectureCredit}
                       </span>
-                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                        <span className="mr-1 text-purple-500">
-                          공학소양학점:
-                        </span>{" "}
-                        {course.lectureCredit}
-                      </span>
-                      {(course.majorElective || course.majorEssential) && (
-                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                          <span className="mr-1 text-yellow-500">전공</span>
+                      {course.designCredit! > 0 && (
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                          <span className="mr-1 text-purple-500">
+                            설계학점:
+                          </span>{" "}
+                          {course.designCredit}
                         </span>
                       )}
                       {course.majorEssential && (
                         <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
-                          <span className="mr-1 text-red-500">
-                            전공 필수 과목
+                          <span className="mr-1 text-red-500">전공 필수</span>
+                        </span>
+                      )}
+                      {course.majorElective && (
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                          <span className="mr-1 text-yellow-500">
+                            전공 선택
                           </span>
+                        </span>
+                      )}
+                      {course.liberalEssential && (
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-lime-100 text-lime-800">
+                          <span className="mr-1 text-lime-500">교양 필수</span>
+                        </span>
+                      )}
+                      {course.liberalElective && (
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-cyan-100 text-cyan-800">
+                          <span className="mr-1 text-cyan-500">교양 선택</span>
                         </span>
                       )}
                     </div>
