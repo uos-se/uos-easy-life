@@ -14,11 +14,12 @@ public class Course {
   private final boolean isEngineering; // 공학소양
   private final boolean isBasicAcademic; // 학문기초
   private final int designCredit; // 설계학점
+  private final int lastOpenYear; // 마지막으로 개설된 연도
 
   public Course(String id, String lectureName, String lectureCode, int lectureCredit,
       int lectureGrade, Department department, boolean isMajorElective, boolean isMajorEssential,
       boolean isLiberalElective, boolean isLiberalEssential, boolean isEngineering,
-      boolean isBasicAcademic, int designCredit) {
+      boolean isBasicAcademic, int designCredit, int lastOpenYear) {
     this.id = id;
     this.lectureName = lectureName;
     this.lectureCode = lectureCode;
@@ -32,6 +33,7 @@ public class Course {
     this.isEngineering = isEngineering;
     this.isBasicAcademic = isBasicAcademic;
     this.designCredit = designCredit;
+    this.lastOpenYear = lastOpenYear;
   }
 
   public String getId() {
@@ -86,6 +88,10 @@ public class Course {
     return designCredit;
   }
 
+  public int getLastOpenYear() {
+    return lastOpenYear;
+  }
+
   @Override
   public String toString() {
     return "Course{" +
@@ -102,6 +108,7 @@ public class Course {
         ", isEngineering=" + isEngineering +
         ", isBasicAcademic=" + isBasicAcademic +
         ", designCredit=" + designCredit +
+        ", lastOpenYear=" + lastOpenYear +
         '}';
   }
 }

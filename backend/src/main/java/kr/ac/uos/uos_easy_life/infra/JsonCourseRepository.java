@@ -58,6 +58,7 @@ public class JsonCourseRepository implements CourseRepository {
       boolean isEngineering = courseJson.getString("COURSE_DIVCD_NM2").equals("공학소양");
       boolean isBasicAcademic = courseJson.getString("COURSE_DIVCD_NM2").equals("학문기초");
       int designCredit = courseJson.getInt("DESIGN_PNT");
+      int lastOpenYear = courseJson.getInt("LAST_OPEN_YEAR");
 
       Course course = new Course(
           id,
@@ -72,7 +73,8 @@ public class JsonCourseRepository implements CourseRepository {
           isLiberalEssential,
           isEngineering,
           isBasicAcademic,
-          designCredit);
+          designCredit,
+          lastOpenYear);
 
       courses.add(course);
     }

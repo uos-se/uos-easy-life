@@ -1,5 +1,6 @@
 package kr.ac.uos.uos_easy_life.core.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,11 @@ public class CoursePlanner {
                 continue;
             }
             if (filteredCourseIds.contains(course.getId())) {
+                continue;
+            }
+            // 마지막으로 개설된 연도가 2년 이상인 과목 제거
+            int currentYear = LocalDate.now().getYear();
+            if (course.getLastOpenYear() <= currentYear - 2) {
                 continue;
             }
             filteredCourses.add(course);
@@ -146,7 +152,7 @@ public class CoursePlanner {
         Department cs = Department.fromDepartmentCode(92);
         courses.addAll(courseRepository.findByDepartment(cs));
 
-        // 필터링 (중복 제거, 이미 수강한 과목 제거)
+        // 필터링 (중복 제거, 이미 수강한 과목 제거, 마지막으로 개설된 연도가 2년 이상인 과목 제거)
         courses = filterCourses(user, courses);
 
         return courses;

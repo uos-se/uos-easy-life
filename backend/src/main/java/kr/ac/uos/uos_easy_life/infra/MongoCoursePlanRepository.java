@@ -50,7 +50,8 @@ class CoursePlanDocument {
                 document.getBoolean("isLiberalEssential"),
                 document.getBoolean("isEngineering"),
                 document.getBoolean("isBasicAcademic"),
-                document.getInteger("designCredit"));
+                document.getInteger("designCredit"),
+                document.getInteger("lastOpenYear"));
     }
 
     private CoursePlan parseCoursePlan(Document document) {
@@ -80,7 +81,8 @@ class CoursePlanDocument {
                 .append("isLiberalEssential", course.isLiberalEssential())
                 .append("isEngineering", course.isEngineering())
                 .append("isBasicAcademic", course.isBasicAcademic())
-                .append("designCredit", course.getDesignCredit());
+                .append("designCredit", course.getDesignCredit())
+                .append("lastOpenYear", course.getLastOpenYear());
     }
 
     private Document dumpCoursePlan(CoursePlan coursePlan) {
