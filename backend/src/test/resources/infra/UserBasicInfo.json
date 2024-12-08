@@ -1,0 +1,33 @@
+{
+    "dmGlobalConfig": {
+        "mdiWindowMaxCount": "10",
+        "defaultLocale": "CCMN101.KOR",
+        "isSsoLoginYn": "Y",
+        "defaultTimeOut": "3600",
+        "reportServerUrl": "https://wise.uos.ac.kr/oz80",
+        "defaultTopMenuId": null,
+        "deputyLoginYn": "",
+        "todayDate": "20241208",
+        "topMenuDisplayYn": null
+    },
+    "dsUserSclpstList": [],
+    "dmUserInfo": {
+        "UNITY_ID": "0000000000",
+        "SYS_MNGR_YN": "N",
+        "USER_DIVCD": "0000000.00",
+        "LANG_DIVCD": null,
+        "UNIV_CD": "00000",
+        "SCLPST_STTS_CD": "0000000.00",
+        "USER_ID": "2020920999",
+        "OGDP_DEPT_CD": "00000",
+        "MBR_STTS_CD": "0000000.00",
+        "SPCL_AUTHORY_YN": "N",
+        "SCSBJT_CD": "00000",
+        "USER_NM": "홍길동",
+        "MJR_CD": null,
+        "OGDP_DEPT_NM": "컴퓨터과학부",
+        "CNTN_MNTNC_YN": null,
+        "SCLPST_SCLSF_CD": "0000000.000",
+        "STDNT_GRADE": 3
+    }
+}
