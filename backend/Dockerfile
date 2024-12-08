@@ -14,7 +14,8 @@ COPY . .
 # Build the application
 RUN gradle bootJar --no-daemon
 
-FROM ubuntu:22.04
+# Base image with Playwright dependencies
+FROM mcr.microsoft.com/playwright/java:v1.40.0 AS playwright-base
 
 RUN apt-get update && apt-get install -y \
   openjdk-21-jre-headless \
@@ -23,8 +24,6 @@ ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 ENV PATH=$PATH:$JAVA_HOME/bin
 
 WORKDIR /app
-COPY --from=build /app/build/libs/*.jar /app/app.jar
-RUN java -jar /app/app.jar --install-deps && rm -rf /var/lib/apt/lists/*
-RUN java -jar /app/app.jar --install-browser
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

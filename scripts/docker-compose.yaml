@@ -8,9 +8,7 @@ services:
       - app-network
 
   backend:
-    build: 
-      context: ../backend
-      dockerfile: Dockerfile.dev
+    build: ../backend
     image: backend
     container_name: backend
     ports:
