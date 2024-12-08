@@ -23,14 +23,32 @@ public class CoursePlanner {
     }
 
     private List<Course> filterCourses(User user, List<Course> courses) {
-        List<Course> filteredCourses = new ArrayList<>();
-        Set<String> filteredCourseIds = new HashSet<>();
+        /*
+         * 중복 제거를 위해 이미 수강한 과목 코드 저장
+         * NOTE: 같은 Course code를 가진 타과 강의가 있기도 하다. 그래서 이것이 매칭되지 않도록 Course id 대신 course
+         * code로 체크한다. 이것이 필요한 이유는 일차적으로는 지금 UserService에서 로직상의 오류로 registration에 과목 코드가
+         * 동일한 타 학과 과목이 들어가있는 경우가 있기 때문이다.
+         * 
+         * 그러나 나중에 이 오류가 해결되더라도 course code 기반 매칭은 필요하다. 왜냐하면 지금은 planning 시 수강 가능한 타과
+         * 전공이나 타과 교양을 추천하지 않지만 나중에 타과의 수강 가능한 전공 등 과목을 추천하는 등 확장하게 되면 course id 기반의
+         * 필터링이 필요하기 때문이다.
+         */
+        Set<String> filteredCourseCodes = new HashSet<>();
         List<String> registeredCourseIds = registrationRepository.findRegisteredCourses(user.getId());
+        for (String courseId : registeredCourseIds) {
+            Course course = courseRepository.findById(courseId);
+            if (course != null) {
+                filteredCourseCodes.add(course.getLectureCode());
+            }
+        }
+
+        // 기수강 과목과 주어진 courses 리스트 내에서 중복되는 과목, 최근 2년 이상 개설되지 않은 과목 제거
+        List<Course> filteredCourses = new ArrayList<>();
         for (Course course : courses) {
             if (registeredCourseIds.contains(course.getId())) {
                 continue;
             }
-            if (filteredCourseIds.contains(course.getId())) {
+            if (filteredCourseCodes.contains(course.getLectureCode())) {
                 continue;
             }
             // 마지막으로 개설된 연도가 2년 이상인 과목 제거
@@ -39,7 +57,7 @@ public class CoursePlanner {
                 continue;
             }
             filteredCourses.add(course);
-            filteredCourseIds.add(course.getId());
+            filteredCourseCodes.add(course.getLectureCode());
         }
         return filteredCourses;
     }
