@@ -102,6 +102,14 @@ public class JsonCourseRepository implements CourseRepository {
   }
 
   @Override
+  public Course findByNameAndDepartment(String name, Department department) {
+    // 주어진 이름과 학과에 해당하는 강의를 찾아 반환
+    List<Course> departmentCourses = findByDepartment(department);
+    Optional<Course> course = departmentCourses.stream().filter(c -> c.getLectureName().equals(name)).findFirst();
+    return course.orElse(null); // 없으면 null 반환
+  }
+
+  @Override
   public List<Course> findByDepartment(Department department) {
     // 주어진 학과에 해당하는 강의를 찾아 반환
     List<Course> departmentCourses = new ArrayList<>();

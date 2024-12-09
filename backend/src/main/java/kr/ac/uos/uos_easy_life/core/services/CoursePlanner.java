@@ -74,21 +74,21 @@ public class CoursePlanner {
         List<Course> recommendedCourses = new ArrayList<>();
 
         if (grade == 1 && semester == 2) {
-            recommendedCourses.add(courseRepository.findByName("창의공학기초설계"));
-            recommendedCourses.add(courseRepository.findByName("C언어및실습"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("창의공학기초설계", Department.ComputerScience));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("C언어및실습", Department.ComputerScience));
         } else if (grade == 2 && semester == 1) {
-            recommendedCourses.add(courseRepository.findByName("논리회로및실습"));
-            recommendedCourses.add(courseRepository.findByName("이산수학"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("논리회로및실습", Department.ComputerScience));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("이산수학", Department.ComputerScience));
         } else if (grade == 2 && semester == 2) {
-            recommendedCourses.add(courseRepository.findByName("자료구조"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("자료구조", Department.ComputerScience));
         } else if (grade == 3 && semester == 1) {
-            recommendedCourses.add(courseRepository.findByName("운영체제"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("운영체제", Department.ComputerScience));
         } else if (grade == 3 && semester == 2) {
-            recommendedCourses.add(courseRepository.findByName("소프트웨어공학"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("소프트웨어공학", Department.ComputerScience));
         } else if (grade == 4 && semester == 1) {
-            recommendedCourses.add(courseRepository.findByName("컴퓨터과학종합설계"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("컴퓨터과학종합설계", Department.ComputerScience));
         } else if (grade == 4 && semester == 2 && majorCompletedCredit < 24) {
-            recommendedCourses.add(courseRepository.findByName("컴퓨터과학종합설계"));
+            recommendedCourses.add(courseRepository.findByNameAndDepartment("컴퓨터과학종합설계", Department.ComputerScience));
         }
         return recommendedCourses;
     }
@@ -103,17 +103,17 @@ public class CoursePlanner {
     private List<Course> getRecommendedLiberalEssential(int grade, int semester) {
         if (grade == 1 && semester == 1) {
             List<Course> courses = new ArrayList<>();
-            courses.add(courseRepository.findByName("화학및실험1"));
-            courses.add(courseRepository.findByName("물리학및실험1"));
-            courses.add(courseRepository.findByName("생물학및실험1"));
+            courses.add(courseRepository.findByNameAndDepartment("물리학및실험1", Department.GeneralPhysics));
+            courses.add(courseRepository.findByNameAndDepartment("화학및실험1", Department.GeneralChemistry));
+            courses.add(courseRepository.findByNameAndDepartment("생물학및실험1", Department.GeneralBiology));
             return courses;
         }
 
         if (grade == 1 && semester == 2) {
             List<Course> courses = new ArrayList<>();
-            courses.add(courseRepository.findByName("화학및실험2"));
-            courses.add(courseRepository.findByName("물리학및실험2"));
-            courses.add(courseRepository.findByName("생물학및실험2"));
+            courses.add(courseRepository.findByNameAndDepartment("물리학및실험2", Department.GeneralPhysics));
+            courses.add(courseRepository.findByNameAndDepartment("화학및실험2", Department.GeneralChemistry));
+            courses.add(courseRepository.findByNameAndDepartment("생물학및실험2", Department.GeneralBiology));
             return courses;
         }
 
@@ -127,30 +127,30 @@ public class CoursePlanner {
 
         if (user.getCurrentGrade() == 1 && user.getCurrentSemester() == 1) {
             List<Course> courses = new ArrayList<>();
-            courses.add(courseRepository.findByName("UOS미래디자인"));
-            courses.add(courseRepository.findByName("의사결정과토론"));
-            courses.add(courseRepository.findByName("대학영어(W)"));
-            courses.add(courseRepository.findByName("대학수학I"));
-            courses.add(courseRepository.findByName("물리학및실험1"));
-            courses.add(courseRepository.findByName("화학및실험1"));
-            courses.add(courseRepository.findByName("생물학및실험1"));
-            courses.add(courseRepository.findByName("컴퓨터과학개론"));
-            courses.add(courseRepository.findByName("프로그래밍입문"));
+            courses.add(courseRepository.findByNameAndDepartment("고전과함께하는비판적토론", Department.CommunicationClass));
+            courses.add(courseRepository.findByNameAndDepartment("대학영어(W)", Department.GeneralEnglish));
+            courses.add(courseRepository.findByNameAndDepartment("수학 I", Department.GeneralMath));
+            courses.add(courseRepository.findByNameAndDepartment("물리학및실험1", Department.GeneralPhysics));
+            courses.add(courseRepository.findByNameAndDepartment("화학및실험1", Department.GeneralChemistry));
+            courses.add(courseRepository.findByNameAndDepartment("생물학및실험1", Department.GeneralBiology));
+            courses.add(courseRepository.findByNameAndDepartment("컴퓨터과학개론", Department.ComputerScience));
+            courses.add(courseRepository.findByNameAndDepartment("프로그래밍입문", Department.ComputerScience));
+            courses.add(courseRepository.findByNameAndDepartment("UOS미래디자인", Department.GeneralEducation));
             courses.removeIf(course -> course == null);
             return courses;
         }
 
         if (user.getCurrentGrade() == 1 && user.getCurrentSemester() == 2) {
             List<Course> courses = new ArrayList<>();
-            courses.add(courseRepository.findByName("과학기술글쓰기"));
-            courses.add(courseRepository.findByName("대학영어(S)"));
-            courses.add(courseRepository.findByName("물리학및실험2"));
-            courses.add(courseRepository.findByName("화학및실험2"));
-            courses.add(courseRepository.findByName("생물학및실험2"));
-            courses.add(courseRepository.findByName("대학수학II"));
-            courses.add(courseRepository.findByName("창의공학기초설계"));
-            courses.add(courseRepository.findByName("C언어및실습"));
-            courses.add(courseRepository.findByName("공학도의창업과경영"));
+            courses.add(courseRepository.findByNameAndDepartment("과학기술글쓰기", Department.CommunicationClass));
+            courses.add(courseRepository.findByNameAndDepartment("대학영어(S)", Department.GeneralEnglish));
+            courses.add(courseRepository.findByNameAndDepartment("물리학및실험2", Department.GeneralPhysics));
+            courses.add(courseRepository.findByNameAndDepartment("화학및실험2", Department.GeneralChemistry));
+            courses.add(courseRepository.findByNameAndDepartment("생물학및실험2", Department.GeneralBiology));
+            courses.add(courseRepository.findByNameAndDepartment("수학 II", Department.GeneralMath));
+            courses.add(courseRepository.findByNameAndDepartment("창의공학기초설계", Department.ComputerScience));
+            courses.add(courseRepository.findByNameAndDepartment("C언어및실습", Department.ComputerScience));
+            courses.add(courseRepository.findByNameAndDepartment("공학도의창업과경영", Department.GeneralEducation));
             courses.removeIf(course -> course == null);
             return courses;
         }
@@ -167,8 +167,7 @@ public class CoursePlanner {
                 user.getCurrentSemester()));
 
         // 아몰랑 컴퓨터과학부 수업 전부 추가~~
-        Department cs = Department.fromDepartmentCode(92);
-        courses.addAll(courseRepository.findByDepartment(cs));
+        courses.addAll(courseRepository.findByDepartment(Department.ComputerScience));
 
         // 필터링 (중복 제거, 이미 수강한 과목 제거, 마지막으로 개설된 연도가 2년 이상인 과목 제거)
         courses = filterCourses(user, courses);
