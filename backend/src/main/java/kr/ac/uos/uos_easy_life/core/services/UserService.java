@@ -90,6 +90,17 @@ public class UserService {
     // Sync courses
     List<String> courseCodes = uosApi.getUserCourseCodes(session, user.getStudentId());
     for (String courseCode : courseCodes) {
+      /*
+       * TODO: 이 부분에서 강의 코드는 같지만 다른 학과의 강의가 검색되는 경우가 있다. 이 이슈 해결해야 함.
+       * 
+       * 이 이슈는 findByCode에서 단순히 코드가 매칭되는 번째 강의를 반환하는 것이 아니라 매칭되는 모든 강의를 반환하도록 한 후 여기에서
+       * 비즈니스 로직으로 학과 정보 등을 고려하여 필터링하도록 수정해야 한다. 이를 위해서는 uosApi.getUserCourseCodes를
+       * 단순히 course code 뿐만 아니라 강의를 구체적으로 결정할 수 있는 정보를 포함하도록 수정해야 한다.
+       * 
+       * Registration에 단순히 강의 코드만을 저장하여 해결할 수도 있지만, 이렇게 하면 연도에 따라 동일한 강의이지만 수강 학점이
+       * 달라지거나 연도에 따라 전공필수/공학필수 등 여부가 달라지는 등의 edge-case에 대응할 수 없게 되므로 추후 확장성을 위해 이
+       * 방식으로 해결하지는 않기로 한다.
+       */
       Course course = courseRepository.findByCode(courseCode);
       if (course == null) {
         System.out.println("강의가 존재하지 않습니다. 강의코드: " + courseCode);

@@ -11,6 +11,8 @@ public interface CourseRepository {
 
   public Course findByName(String name);
 
+  public Course findByNameAndDepartment(String name, Department department);
+
   public List<Course> findByDepartment(Department department);
 
   public List<Course> findAll();
