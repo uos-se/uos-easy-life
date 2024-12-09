@@ -57,7 +57,7 @@ public class UserAcademicStatus {
         return liberalEssentialCompletedCredit;
     }
 
-    public int getEngineeringCompletedCredit(){
+    public int getEngineeringCompletedCredit() {
         return engineeringCompletedCredit;
     }
 

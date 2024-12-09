@@ -1,18 +1,19 @@
 package kr.ac.uos.uos_easy_life.infra;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import kr.ac.uos.uos_easy_life.core.model.Department;
-import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
 import kr.ac.uos.uos_easy_life.core.model.UserInfo;
+import kr.ac.uos.uos_easy_life.infra.UosApiParser.ExpectedUserAcademicStatus;
 
 class UosApiParserTest {
 
@@ -50,24 +51,36 @@ class UosApiParserTest {
   }
 
   @Test
-  void parseUserAcademicStatusTest() throws IOException {
+  void parseTotalGradePointAverageTest() throws IOException {
     // given
-    File file = new File(mockDataPath + "UserAcademicStatus.json");
+    File file = new File(mockDataPath + "UserTotalGradePointAverage.json");
     String response = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
     // when
-    UserAcademicStatus result = parser.parseUserAcademicStatus(response);
+    double result = parser.parseTotalGradePointAverage(response);
+
+    // then
+    assertThat(result).isEqualTo(3.5);
+  }
+
+  @Test
+  void parseExpectedUserAcademicStatusTest() throws IOException {
+    // given
+    File file = new File(mockDataPath + "UserExpectedAcademicStatus.json");
+    String response = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+
+    // when
+    ExpectedUserAcademicStatus result = parser.parseExpectedUserAcademicStatus(response);
 
     // then
     assertThat(result).isNotNull();
-    assertThat(result.getTotalCompletedCredit()).isEqualTo(97);
-    assertThat(result.getMajorCompletedCredit()).isEqualTo(54);
-    assertThat(result.getMajorEssentialCompletedCredit()).isEqualTo(18);
-    assertThat(result.getLiberalCompletedCredit()).isEqualTo(31);
+    assertThat(result.getTotalCompletedCredit()).isEqualTo(115);
+    assertThat(result.getMajorCompletedCredit()).isEqualTo(66);
+    assertThat(result.getMajorEssentialCompletedCredit()).isEqualTo(21);
+    assertThat(result.getLiberalCompletedCredit()).isEqualTo(34);
     assertThat(result.getLiberalEssentialCompletedCredit()).isEqualTo(14);
-    assertThat(result.getEngineeringCompletedCredit()).isEqualTo(4);
-    assertThat(result.getGeneralCompletedCredit()).isEqualTo(3);
-    assertThat(result.getTotalGradePointAverage()).isEqualTo(3.5);
+    assertThat(result.getEngineeringCompletedCredit()).isEqualTo(6);
+    assertThat(result.getGeneralCompletedCredit()).isEqualTo(6);
   }
 
   @Test

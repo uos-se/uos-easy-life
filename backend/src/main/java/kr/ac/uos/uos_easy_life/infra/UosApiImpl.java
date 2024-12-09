@@ -18,6 +18,7 @@ import kr.ac.uos.uos_easy_life.core.model.UosSession;
 import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
 import kr.ac.uos.uos_easy_life.core.model.UserInfo;
+import kr.ac.uos.uos_easy_life.infra.UosApiParser.ExpectedUserAcademicStatus;
 
 @Component
 public class UosApiImpl implements UosApi {
@@ -94,7 +95,8 @@ public class UosApiImpl implements UosApi {
   @Override
   public UserAcademicStatus getUserAcademicStatus(UosSession session, String name, String studentId) {
     LocalDate currentDate = LocalDate.now();
-    String path = "/SCH/SugtPlanCmpSubject/listGrdtnCmpnCrtr.do";
+    String pathForExpectedUserAcademicStatus = "/SCH/SugtPlanCmpSubject/listEspectCmpnPnt.do";
+    String pathForTotalGradePointAverage = "/SCH/SugtPlanCmpSubject/listGrdtnCmpnCrtr.do";
     String body = "_AUTH_MENU_KEY=SugtPlanCmpSubject_5"
         + "&_AUTH_PGM_ID=SugtPlanCmpSubject"
         + "&__PRVC_PSBLTY_YN=N"
@@ -110,12 +112,51 @@ public class UosApiImpl implements UosApi {
         + "&%40d1%23=dmReqKey"
         + "&%40d1%23tp=dm";
 
+    /**
+     * _AUTH_MENU_KEY=SugtPlanCmpSubject_5
+     * &_AUTH_PGM_ID=SugtPlanCmpSubject
+     * &__PRVC_PSBLTY_YN=N
+     * &_AUTH_TASK_AUTHRT_ID=CCMN_SVC
+     * &default.locale=CCMN101.KOR
+     * &%40d1%23strAcyr=2024
+     * &%40d1%23strSemstrCd=CCMN031.21
+     * &%40d1%23strStdntNo=2020920025
+     * &%40d1%23strStdntNm=%EB%B0%95%EC%A0%95%EC%9D%B5
+     * &%40d1%23strLocale=CCMN101.KOR
+     * &%40d1%23strPopDiv=
+     * &%40d%23=%40d1%23
+     * &%40d1%23=dmReqKey
+     * &%40d1%23tp=dm
+     */
+
     try {
-      String response = wiseRequest(path, body, session);
-      return parser.parseUserAcademicStatus(response);
+      ExpectedUserAcademicStatus expected = getExpectedTotalGradePointAverage(
+          pathForExpectedUserAcademicStatus, body, session);
+      double totalGradePointAverage = getTotalGradePointAverage(pathForTotalGradePointAverage, body, session);
+      return new UserAcademicStatus(
+          expected.getTotalCompletedCredit(),
+          expected.getMajorCompletedCredit(),
+          expected.getMajorEssentialCompletedCredit(),
+          expected.getLiberalCompletedCredit(),
+          expected.getLiberalEssentialCompletedCredit(),
+          expected.getEngineeringCompletedCredit(),
+          expected.getGeneralCompletedCredit(),
+          totalGradePointAverage);
     } catch (IOException | InterruptedException | JSONException e) {
       throw new RuntimeException("Failed to get user academic status", e);
     }
+  }
+
+  private double getTotalGradePointAverage(String path, String body, UosSession session)
+      throws IOException, InterruptedException {
+    String response = wiseRequest(path, body, session);
+    return parser.parseTotalGradePointAverage(response);
+  }
+
+  private ExpectedUserAcademicStatus getExpectedTotalGradePointAverage(String path, String body, UosSession session)
+      throws IOException, InterruptedException {
+    String response = wiseRequest(path, body, session);
+    return parser.parseExpectedUserAcademicStatus(response);
   }
 
   @Override

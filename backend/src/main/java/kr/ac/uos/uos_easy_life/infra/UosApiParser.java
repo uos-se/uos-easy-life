@@ -37,15 +37,8 @@ public class UosApiParser {
     return courseCodes;
   }
 
-  public UserAcademicStatus parseUserAcademicStatus(String response) {
-    int totalCompletedCredit = 0;
-    int majorCompletedCredit = 0;
-    int majorEssentialCompletedCredit = 0;
-    int liberalCompletedCredit = 0;
-    int liberalEssentialCompletedCredit = 0;
-    int engineeringCompletedCredit = 0;
-    int generalCompletedCredit = 0;
-    double totalGradePointAverage = 0.0;
+  public double parseTotalGradePointAverage(String response) {
+    double totalGradePointAverage = -1.0;
 
     JSONObject obj = new JSONObject(response);
     JSONArray academicStatus = obj.getJSONArray("dsGrdtnCmpnCrtr");
@@ -62,8 +55,60 @@ public class UosApiParser {
     for (int i = 0; i < academicStatus.length(); i++) {
       JSONObject status = academicStatus.getJSONObject(i);
       String category = status.getString("GRDTN_CMPN_CRTR_NM");
+      if (category.equals("총평점평균")) {
+        totalGradePointAverage = status.getDouble("CMPN_PNT");
+        break;
+      }
+    }
+
+    if (totalGradePointAverage == -1.0) {
+      throw new JSONException("Total grade point average not found");
+    }
+
+    return totalGradePointAverage;
+  }
+
+  public ExpectedUserAcademicStatus parseExpectedUserAcademicStatus(String response) {
+    int totalCompletedCredit = -1;
+    int majorCompletedCredit = -1;
+    int majorEssentialCompletedCredit = -1;
+    int liberalCompletedCredit = -1;
+    int liberalEssentialCompletedCredit = -1;
+    int engineeringCompletedCredit = -1;
+    int generalCompletedCredit = -1;
+
+    JSONObject obj = new JSONObject(response);
+    JSONArray academicStatus = obj.getJSONArray("dsEspectCmpnPnt");
+
+    /*
+     * Each element of academicStatus is like below:
+     * {
+     * "MJR_DIVCD": "SUSR003.01",
+     * "COURSE_DIVNM": null,
+     * "GRDTN_CMPN_CRTR_CD": "SUGT001.01",
+     * "COURSE_DIVCD": null,
+     * "COMPNO_MJR": "20031",
+     * "MUMM_PNT": 130,
+     * "COMPNO_MJR_NM": "수학과",
+     * "TLSN_CNT": 7,
+     * "TLSN_SEASON_PNT": 0,
+     * "CMPN_TLSN_PNT": 115,
+     * "OTPT_ORDR": "1",
+     * "MJR_DIVNM": "주전공",
+     * "GRDTN_CMPN_CRTR_NM": "졸업이수학점",
+     * "MXMM_PNT": 0,
+     * "TLSN_SEASON_CNT": 0,
+     * "CMPN_SBJECT_CNT": 36,
+     * "CMPN_PNT": 97,
+     * "TLSN_PNT": 18,
+     * "STDNT_NO": "2020920999"
+     * }
+     */
+    for (int i = 0; i < academicStatus.length(); i++) {
+      JSONObject status = academicStatus.getJSONObject(i);
+      String category = status.getString("GRDTN_CMPN_CRTR_NM");
       String detailDomain = status.optString("COURSE_DIVNM", null);
-      int completedCredit = status.getInt("CMPN_PNT");
+      int completedCredit = status.getInt("CMPN_TLSN_PNT");
 
       if (category.equals("졸업이수학점") && detailDomain == null) {
         totalCompletedCredit = completedCredit;
@@ -79,20 +124,24 @@ public class UosApiParser {
         engineeringCompletedCredit = completedCredit;
       } else if (category.equals("일반선택") && detailDomain == null) {
         generalCompletedCredit = completedCredit;
-      } else if (category.equals("총평점평균") && detailDomain == null) {
-        totalGradePointAverage = status.getDouble("CMPN_PNT");
       }
     }
 
-    return new UserAcademicStatus(
+    // validate
+    if (totalCompletedCredit == -1 || majorCompletedCredit == -1 || majorEssentialCompletedCredit == -1
+        || liberalCompletedCredit == -1 || liberalEssentialCompletedCredit == -1 || engineeringCompletedCredit == -1
+        || generalCompletedCredit == -1) {
+      throw new JSONException("User expected academic status not found");
+    }
+
+    return new ExpectedUserAcademicStatus(
         totalCompletedCredit,
         majorCompletedCredit,
         majorEssentialCompletedCredit,
         liberalCompletedCredit,
         liberalEssentialCompletedCredit,
         engineeringCompletedCredit,
-        generalCompletedCredit,
-        totalGradePointAverage);
+        generalCompletedCredit);
   }
 
   public boolean parseCertificationCompleted(String response, String certificationName) {
@@ -126,4 +175,53 @@ public class UosApiParser {
     return new UserInfo(department, grade, semester);
   }
 
+  class ExpectedUserAcademicStatus {
+    int totalCompletedCredit = -1;
+    int majorCompletedCredit = -1;
+    int majorEssentialCompletedCredit = -1;
+    int liberalCompletedCredit = -1;
+    int liberalEssentialCompletedCredit = -1;
+    int engineeringCompletedCredit = -1;
+    int generalCompletedCredit = -1;
+
+    public ExpectedUserAcademicStatus(int totalCompletedCredit, int majorCompletedCredit,
+        int majorEssentialCompletedCredit, int liberalCompletedCredit,
+        int liberalEssentialCompletedCredit, int engineeringCompletedCredit, int generalCompletedCredit) {
+      this.totalCompletedCredit = totalCompletedCredit;
+      this.majorCompletedCredit = majorCompletedCredit;
+      this.majorEssentialCompletedCredit = majorEssentialCompletedCredit;
+      this.liberalCompletedCredit = liberalCompletedCredit;
+      this.liberalEssentialCompletedCredit = liberalEssentialCompletedCredit;
+      this.engineeringCompletedCredit = engineeringCompletedCredit;
+      this.generalCompletedCredit = generalCompletedCredit;
+    }
+
+    public int getTotalCompletedCredit() {
+      return totalCompletedCredit;
+    }
+
+    public int getMajorCompletedCredit() {
+      return majorCompletedCredit;
+    }
+
+    public int getMajorEssentialCompletedCredit() {
+      return majorEssentialCompletedCredit;
+    }
+
+    public int getLiberalCompletedCredit() {
+      return liberalCompletedCredit;
+    }
+
+    public int getLiberalEssentialCompletedCredit() {
+      return liberalEssentialCompletedCredit;
+    }
+
+    public int getEngineeringCompletedCredit() {
+      return engineeringCompletedCredit;
+    }
+
+    public int getGeneralCompletedCredit() {
+      return generalCompletedCredit;
+    }
+  }
 }
