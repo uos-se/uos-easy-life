@@ -90,22 +90,28 @@ public class JsonCourseRepository implements CourseRepository {
   @Override
   public Course findByCode(String code) {
     // 주어진 코드에 해당하는 강의를 찾아 반환
-    Optional<Course> course = courses.stream().filter(c -> c.getLectureCode().equals(code)).findFirst();
+    // 가장 최근 개설된 강의를 반환
+    Optional<Course> course = courses.stream().filter(c -> c.getLectureCode().equals(code))
+        .max((c1, c2) -> Integer.compare(c1.getLastOpenYear(), c2.getLastOpenYear()));
     return course.orElse(null); // 없으면 null 반환
   }
 
   @Override
   public Course findByName(String name) {
     // 주어진 이름에 해당하는 강의를 찾아 반환
-    Optional<Course> course = courses.stream().filter(c -> c.getLectureName().equals(name)).findFirst();
+    // 가장 최근 개설된 강의를 반환
+    Optional<Course> course = courses.stream().filter(c -> c.getLectureName().equals(name))
+        .max((c1, c2) -> Integer.compare(c1.getLastOpenYear(), c2.getLastOpenYear()));
     return course.orElse(null); // 없으면 null 반환
   }
 
   @Override
   public Course findByNameAndDepartment(String name, Department department) {
     // 주어진 이름과 학과에 해당하는 강의를 찾아 반환
+    // 가장 최근 개설된 강의를 반환
     List<Course> departmentCourses = findByDepartment(department);
-    Optional<Course> course = departmentCourses.stream().filter(c -> c.getLectureName().equals(name)).findFirst();
+    Optional<Course> course = departmentCourses.stream().filter(c -> c.getLectureName().equals(name))
+        .max((c1, c2) -> Integer.compare(c1.getLastOpenYear(), c2.getLastOpenYear()));
     return course.orElse(null); // 없으면 null 반환
   }
 
