@@ -6,7 +6,7 @@ ROOT=`pwd`
 cleanup() {
   echo -e "\rCleaning up..."
   pkill -P $$ || true
-  docker-compose -f $ROOT/scripts/docker-compose.yaml down 2>&1 > /dev/null || true
+  docker-compose -f $ROOT/scripts/docker-compose.yaml down --volumes 2>&1 > /dev/null || true
   echo "Done."
   exit 0
 }
