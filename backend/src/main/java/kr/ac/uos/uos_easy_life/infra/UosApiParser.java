@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import kr.ac.uos.uos_easy_life.core.model.Department;
-import kr.ac.uos.uos_easy_life.core.model.UserAcademicStatus;
 import kr.ac.uos.uos_easy_life.core.model.UserBasicInfo;
 import kr.ac.uos.uos_easy_life.core.model.UserInfo;
 

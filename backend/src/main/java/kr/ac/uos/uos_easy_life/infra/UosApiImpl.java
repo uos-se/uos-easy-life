@@ -112,23 +112,6 @@ public class UosApiImpl implements UosApi {
         + "&%40d1%23=dmReqKey"
         + "&%40d1%23tp=dm";
 
-    /**
-     * _AUTH_MENU_KEY=SugtPlanCmpSubject_5
-     * &_AUTH_PGM_ID=SugtPlanCmpSubject
-     * &__PRVC_PSBLTY_YN=N
-     * &_AUTH_TASK_AUTHRT_ID=CCMN_SVC
-     * &default.locale=CCMN101.KOR
-     * &%40d1%23strAcyr=2024
-     * &%40d1%23strSemstrCd=CCMN031.21
-     * &%40d1%23strStdntNo=2020920025
-     * &%40d1%23strStdntNm=%EB%B0%95%EC%A0%95%EC%9D%B5
-     * &%40d1%23strLocale=CCMN101.KOR
-     * &%40d1%23strPopDiv=
-     * &%40d%23=%40d1%23
-     * &%40d1%23=dmReqKey
-     * &%40d1%23tp=dm
-     */
-
     try {
       ExpectedUserAcademicStatus expected = getExpectedTotalGradePointAverage(
           pathForExpectedUserAcademicStatus, body, session);

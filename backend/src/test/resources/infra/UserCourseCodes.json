@@ -1,43 +1,43 @@
 {
-    "dsTlsnList": [
-        {
-            "COURSE_DIVNM": "교양선택",
-            "SEMSTR_NM": "1학기",
-            "SBJC_NM": "물리학및실험1",
-            "APLY_PNT": 4,
-            "SEMSTR_CD": "CCMN031.10",
-            "ACYR": "2020",
-            "CMPN_GRADE": 1,
-            "PRMOT_SEMSTR_CNT": 1,
-            "STDNT_NO": "2020920999",
-            "SBJC_NO": "01108"
-        },
-        {
-            "COURSE_DIVNM": "전공필수",
-            "SEMSTR_NM": "2학기",
-            "SBJC_NM": "소프트웨어공학",
-            "APLY_PNT": 3,
-            "SEMSTR_CD": "CCMN031.20",
-            "ACYR": "2024",
-            "CMPN_GRADE": 3,
-            "PRMOT_SEMSTR_CNT": 6,
-            "STDNT_NO": "2020920999",
-            "SBJC_NO": "71032"
-        }
-    ],
-    "dsSuabCertList": [],
-    "dsShregList": [],
-    "dsMjSubList": [],
-    "dsRegList": [],
-    "dsMjList": [],
-    "dsStudentInfoDtl": [],
-    "dsOtcmList": [],
-    "dsGrdtCertList": [],
-    "dsScsbjtList": [],
-    "dsGrdtCertCommList": [],
-    "dsTestList": [],
-    "dsDrmyList": [],
-    "dsIntchList": [],
-    "dsGrdtList": [],
-    "dsScalList": []
+  "dsTlsnList": [
+    {
+      "COURSE_DIVNM": "교양선택",
+      "SEMSTR_NM": "1학기",
+      "SBJC_NM": "물리학및실험1",
+      "APLY_PNT": 4,
+      "SEMSTR_CD": "CCMN031.10",
+      "ACYR": "2020",
+      "CMPN_GRADE": 1,
+      "PRMOT_SEMSTR_CNT": 1,
+      "STDNT_NO": "2020920999",
+      "SBJC_NO": "01108"
+    },
+    {
+      "COURSE_DIVNM": "전공필수",
+      "SEMSTR_NM": "2학기",
+      "SBJC_NM": "소프트웨어공학",
+      "APLY_PNT": 3,
+      "SEMSTR_CD": "CCMN031.20",
+      "ACYR": "2024",
+      "CMPN_GRADE": 3,
+      "PRMOT_SEMSTR_CNT": 6,
+      "STDNT_NO": "2020920999",
+      "SBJC_NO": "71032"
+    }
+  ],
+  "dsSuabCertList": [],
+  "dsShregList": [],
+  "dsMjSubList": [],
+  "dsRegList": [],
+  "dsMjList": [],
+  "dsStudentInfoDtl": [],
+  "dsOtcmList": [],
+  "dsGrdtCertList": [],
+  "dsScsbjtList": [],
+  "dsGrdtCertCommList": [],
+  "dsTestList": [],
+  "dsDrmyList": [],
+  "dsIntchList": [],
+  "dsGrdtList": [],
+  "dsScalList": []
 }

@@ -9,17 +9,17 @@ import kr.ac.uos.uos_easy_life.core.model.CoursePlan;
 
 @Service
 public class CoursePlanService {
-    private final CoursePlanRepository coursePlanRepository;
+  private final CoursePlanRepository coursePlanRepository;
 
-    public CoursePlanService(CoursePlanRepository coursePlanRepository) {
-        this.coursePlanRepository = coursePlanRepository;
-    }
+  public CoursePlanService(CoursePlanRepository coursePlanRepository) {
+    this.coursePlanRepository = coursePlanRepository;
+  }
 
-    public void setCoursePlan(String userId, List<CoursePlan> coursePlan) {
-        coursePlanRepository.setCoursePlan(userId, coursePlan);
-    }
+  public void setCoursePlan(String userId, List<CoursePlan> coursePlan) {
+    coursePlanRepository.setCoursePlan(userId, coursePlan);
+  }
 
-    public List<CoursePlan> getCoursePlan(String userId) {
-        return coursePlanRepository.getCoursePlan(userId);
-    }
+  public List<CoursePlan> getCoursePlan(String userId) {
+    return coursePlanRepository.getCoursePlan(userId);
+  }
 }
