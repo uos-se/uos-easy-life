@@ -43,7 +43,9 @@ UOS Easy Life는 복잡한 학교 학사 정보 시스템의 접근성을 개선
 - **졸업까지 시간표 설계**: 사용자가 졸업할 때까지의 전체 시간표를 설계할 수 있는 유틸리티 제공
 
 - Demo Video
-  <img src="https://github.com/user-attachments/assets/f8526f95-3608-4b31-8e56-08949ef33d4d"/>
+<img src="https://github.com/user-attachments/assets/79bfe99a-1d83-434e-be98-5b54bdb7b3d7">
+
+
 
 ## 프로젝트 제약사항
 
