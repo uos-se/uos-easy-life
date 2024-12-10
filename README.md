@@ -43,8 +43,7 @@ UOS Easy Life는 복잡한 학교 학사 정보 시스템의 접근성을 개선
 - **졸업까지 시간표 설계**: 사용자가 졸업할 때까지의 전체 시간표를 설계할 수 있는 유틸리티 제공
 
 - Demo Video
-  <img src="https://github.com/user-attachments/assets/f8526f95-3608-4b31-8e56-08949ef33d4d
-  ">
+  <img src="https://github.com/user-attachments/assets/f8526f95-3608-4b31-8e56-08949ef33d4d"/>
 
 ## 프로젝트 제약사항
 
@@ -159,6 +158,10 @@ UOS Easy Life는 복잡한 학교 학사 정보 시스템의 접근성을 개선
 - UI Design: [pptx file](https://github.com/uos-se/uos-easy-life/blob/aec3bec7dc19907d24b8e14652272ab137567734/artifacts/%5B1117%5Ddesign/UI%20Design.pptx?raw=true)
 
 ### Coding Standard
+
+- **Naming Convention**: Camel case, Java standard
+- **백엔드**: Google Java Style Guide [링크](https://google.github.io/styleguide/javaguide.html)
+- **프론트엔드**: Prettier default style [링크](https://prettier.io/docs/en/options.html)
 
 ### Code
 
