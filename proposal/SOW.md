@@ -84,48 +84,48 @@
 
 ### 6.4. 아키텍쳐 및 설계 - High Level View
 
-<img width="700" alt="highlevel_architecture" src="https://github.com/user-attachments/assets/e80b36cc-fe3f-4b43-b95f-ff80c9de3d2d" />
+<img width="650" alt="highlevel_architecture" src="https://github.com/user-attachments/assets/e80b36cc-fe3f-4b43-b95f-ff80c9de3d2d" />
 
 ### 6.5. 아키텍처 및 설계 - UML Diagrams
 
 #### 6.5.1 Class Diagram for Static View
   
-<img width="700" alt="Class diagram" src="https://github.com/user-attachments/assets/30f9cde9-f0bf-4d72-8913-2f4861a36afa" />
+<img width="650" alt="Class diagram" src="https://github.com/user-attachments/assets/30f9cde9-f0bf-4d72-8913-2f4861a36afa" />
   
 #### 6.5.2 Sequence Diagrams
 
 **Use case: UC001**
 
-<img width="700" alt="seq diagram" src="https://github.com/user-attachments/assets/c90e4e4d-066b-4c80-b3c2-d19cdb6992d8" />
+<img width="650" alt="seq diagram" src="https://github.com/user-attachments/assets/c90e4e4d-066b-4c80-b3c2-d19cdb6992d8" />
 
 **Use case: UC002**
 
-<img width="700" alt="seq diagram" src="https://github.com/user-attachments/assets/1cb1cd77-38d7-4eef-b17b-4b8764932b96" />
+<img width="650" alt="seq diagram" src="https://github.com/user-attachments/assets/1cb1cd77-38d7-4eef-b17b-4b8764932b96" />
 
 **Use case: UC003**
 
-<img width="700" alt="seq diagram" src="https://github.com/user-attachments/assets/2025d940-c91c-4660-bb30-21e12f30e6e8" />
+<img width="650" alt="seq diagram" src="https://github.com/user-attachments/assets/2025d940-c91c-4660-bb30-21e12f30e6e8" />
 
 **Use case: UC004**
 
-<img width="700" alt="seq diagram" src="https://github.com/user-attachments/assets/d7e90029-f442-4cfa-9de6-ff9f0a0af631" />
+<img width="650" alt="seq diagram" src="https://github.com/user-attachments/assets/d7e90029-f442-4cfa-9de6-ff9f0a0af631" />
 
 **Use case: UC005**
 
-<img width="700" alt="seq diagram" src="https://github.com/user-attachments/assets/0cf2ce4e-476f-4949-8c22-1ea3b1795eb3" />
+<img width="650" alt="seq diagram" src="https://github.com/user-attachments/assets/0cf2ce4e-476f-4949-8c22-1ea3b1795eb3" />
 
 ### 6.6. UI Design {#6.6.-ui-design}
 
 **로그인 UI**  
-<img width="700" alt="login ui" src="https://github.com/user-attachments/assets/4e5e092d-ffe1-4a20-95ca-bb8e92ea5fd4" />  
+<img width="650" alt="login ui" src="https://github.com/user-attachments/assets/4e5e092d-ffe1-4a20-95ca-bb8e92ea5fd4" />  
 
 **유저 대시보드 UI**  
-<img width="700" alt="dashboard1" src="https://github.com/user-attachments/assets/bc50c3de-0b75-4abd-b6f4-54bee334ee79" />  
+<img width="650" alt="dashboard1" src="https://github.com/user-attachments/assets/bc50c3de-0b75-4abd-b6f4-54bee334ee79" />  
   
-<img width="700" alt="dashboard1" src="https://github.com/user-attachments/assets/d846b161-1f60-46e6-88ef-ef07848d247a" />
+<img width="650" alt="dashboard1" src="https://github.com/user-attachments/assets/d846b161-1f60-46e6-88ef-ef07848d247a" />
 
 **Sketch: Design Concept**  
-<img width="700" alt="design concept" src="https://github.com/user-attachments/assets/3009ca95-f690-49b1-a895-b59a03279749" />
+<img width="450" alt="design concept" src="https://github.com/user-attachments/assets/3009ca95-f690-49b1-a895-b59a03279749" />
 
 ### 6.7. Branch Strategy
 
@@ -197,7 +197,7 @@ Repository의 폴더구조는 다음과 같다.
 | 환경적 제약 사항 | 개발된 소프트웨어는 Kubernetes와  OnPromise Server에서 배포된다. 코드의 버전 관리는 Git과 연동된다.  |
 | 정책적 제약사항 | 이루넷 시스템을 이용하기 때문에 유저가 사용하고 있는 도중에는 데이터를 가지고 올 수 없다. |
 | 신뢰성 요구사항 | 유저 이루넷 ID/PW 정보는 Database에 저장되지 않아야 한다. 유저의 승인 없이 이루넷의 데이터에 접근하지 않아야 한다. 모든 데이터 접근과 변경 작업은 기록돼야 한다.  |
-| 비용적 제약사항 | OnPromise Server는 비용적 한계로 인해 기존에 보유한 리소스를 최대한 활용한다. 신규 하드웨어 구매 없이 현재 사용 중인 서버 인프라를 활용한다.  |
+| 비용적 제약사항 | OnPromise Server는 비용적 한계로 인해 기존에 보유한 리소스를 최대한 활용한다. 신규 하드웨어 구매 없이 현재 사용 중인 서버 인프라를 활용한다.  |
 | 시간 제약사항 | 프로젝트는 2024년 2학기 이내에 완료되어야 한다. |
 
 ## 8. Project Team Members
